@@ -11,7 +11,7 @@ export type RadioTheme = {
   accent: string;
 };
 
-/** The six reference environments, in picker order. */
+/** The five reference environments, in picker order. */
 export const RADIO_THEMES: RadioTheme[] = [
   {
     id: "fantasy",
@@ -30,15 +30,6 @@ export const RADIO_THEMES: RadioTheme[] = [
     mood: "focus",
     source: "radio-browser",
     accent: "#c36a35",
-  },
-  {
-    id: "editorial",
-    label: "极简",
-    family: "乔木原版",
-    note: "大封面与留白",
-    mood: "focus",
-    source: "radio-browser",
-    accent: "#2f6f69",
   },
   {
     id: "pocket",

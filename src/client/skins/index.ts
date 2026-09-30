@@ -3,14 +3,12 @@
 import type { ThemeId } from "../../core/types";
 import { ConsoleSkin } from "./ConsoleSkin";
 import { DeckSkin } from "./DeckSkin";
-import { EditorialSkin } from "./EditorialSkin";
 import { FantasySkin } from "./FantasySkin";
 import { PocketSkin } from "./PocketSkin";
 import { RamsSkin } from "./RamsSkin";
 import type { SkinRenderer } from "./types";
 
 export const SKINS: Record<ThemeId, SkinRenderer> = {
-  editorial: EditorialSkin,
   pocket: PocketSkin,
   deck: DeckSkin,
   console: ConsoleSkin,

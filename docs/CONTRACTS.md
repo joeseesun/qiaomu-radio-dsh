@@ -248,3 +248,7 @@ export function createRadioService(options?: RadioServiceOptions): RadioService;
 - 必要通知和错误使用不参与主体布局的底部区域；舞台始终预留底部空间。
 - 沉浸布局指铺满插件内容区，保留 Harness 导航与窗口；不使用 Fullscreen API，不增加全屏按钮。
 - page 展示在窄屏也至少铺满 iframe 高度；平面播放器扩展内容区，实体播放器保持比例，3D 场景使用可用空间。
+
+## 13. 移除极简皮肤
+
+当前支持五款皮肤：fantasy / rams / pocket / deck / console。Minimal（editorial）不再出现在主题菜单或渲染注册表；历史 editorial 设置与链接自动迁移为 rams，并保存迁移结果。此前六皮肤条目为历史基线。
