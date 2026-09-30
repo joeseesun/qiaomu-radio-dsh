@@ -50,7 +50,7 @@
     "build:preview": "node scripts/build-preview.mjs",
     "preview": "node scripts/build-preview.mjs && node preview-dist/server.mjs",
     "preview:serve": "node preview-dist/server.mjs",
-    "check": "npm run typecheck && npm run test && npm run build",
+    "check": "npm run typecheck && npm run test && npm run build && node scripts/verify-package.mjs",
     "prepack": "npm run build && node scripts/verify-package.mjs"
   },
   "devDependencies": {
