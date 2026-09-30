@@ -119,7 +119,7 @@ type Surface = {
   state: () => string | undefined;
 };
 
-async function mount(theme = "editorial"): Promise<Surface> {
+async function mount(theme = "pocket"): Promise<Surface> {
   localStorage.setItem(LOCALE_KEY, "zh-CN");
   const container = document.createElement("div");
   container.className = "radio-mount";
@@ -273,7 +273,7 @@ describe("ui.navigation — in-screen browsing", () => {
   });
 
   it("keeps the playing station, queue and media instance when changing skins", async () => {
-    const surface = await mount("editorial");
+    const surface = await mount("pocket");
     const play = surface.container.querySelector<HTMLButtonElement>('[aria-label="播放"]')!;
     await act(async () => { play.click(); });
     await settle();
@@ -285,7 +285,7 @@ describe("ui.navigation — in-screen browsing", () => {
     const trigger = surface.container.querySelector<HTMLButtonElement>(".theme-trigger")!;
     await act(async () => { trigger.click(); });
     const target = [...surface.container.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]')]
-      .find(item => item.textContent?.includes("iPod"))!;
+      .find(item => item.textContent?.includes("foobar2000"))!;
     await act(async () => { target.click(); });
     await settle();
     expect(surface.host.played).toEqual(beforePlayed);
@@ -298,7 +298,7 @@ describe("ui.navigation — in-screen browsing", () => {
 
   it("switches the environment from the picker and keeps the page", async () => {
     vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("no network"))));
-    const surface = await mount("editorial");
+    const surface = await mount("pocket");
     await press(surface, "Escape");
 
     const trigger = surface.container.querySelector<HTMLButtonElement>(".theme-trigger")!;
@@ -307,7 +307,7 @@ describe("ui.navigation — in-screen browsing", () => {
     });
     await settle(1);
     const items = [...surface.container.querySelectorAll<HTMLElement>('[role="menuitemradio"]')];
-    expect(items).toHaveLength(6);
+    expect(items).toHaveLength(5);
     expect(items.map((item) => item.getAttribute("aria-checked"))).toContain("true");
 
     const fantasy = items.find((item) => item.textContent?.includes("魔兽世界"))!;
@@ -318,7 +318,7 @@ describe("ui.navigation — in-screen browsing", () => {
     const root = surface.container.querySelector<HTMLElement>(".radio-root")!;
     expect(root.dataset.theme).toBe("fantasy");
     expect(surface.container.querySelector(".skin-fantasy")).toBeTruthy();
-    expect(surface.container.querySelector(".skin-editorial")).toBe(null);
+    expect(surface.container.querySelector(".skin-pocket")).toBe(null);
     expect(surface.page()).toBe("menu");
     expect(surface.host.savedThemes.at(-1)).toBe("fantasy");
   });

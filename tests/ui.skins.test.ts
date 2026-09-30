@@ -146,9 +146,9 @@ function guardFetch(): ReturnType<typeof vi.fn> {
 
 /* -------------------------------------------------------------------- tests */
 
-describe("ui.skins — six environments mount", () => {
-  it("covers exactly the six contract themes", () => {
-    expect([...THEME_IDS].sort()).toEqual(["console", "deck", "editorial", "fantasy", "pocket", "rams"]);
+describe("ui.skins — five environments mount", () => {
+  it("covers exactly the five contract themes", () => {
+    expect([...THEME_IDS].sort()).toEqual(["console", "deck", "fantasy", "pocket", "rams"]);
   });
 
   for (const theme of THEME_IDS) {
@@ -224,8 +224,16 @@ describe("ui.skins — six environments mount", () => {
 
   it("keeps a saved environment instead of the mount preference", async () => {
     guardFetch();
-    const { root } = await mount("editorial", 1024, "fantasy");
+    const { root } = await mount("pocket", 1024, "fantasy");
     expect(root().dataset.theme).toBe("fantasy");
+  });
+
+  it("migrates the removed Minimal preference to Braun", async () => {
+    guardFetch();
+    const { root, host } = await mount("pocket", 1024, "editorial");
+    expect(root().dataset.theme).toBe("rams");
+    expect(host.savedThemes.at(-1)).toBe("rams");
+    expect(RADIO_THEMES.some(theme => String(theme.id) === "editorial")).toBe(false);
   });
 
   it("falls back to the Braun radio when nothing is saved", async () => {
@@ -237,7 +245,7 @@ describe("ui.skins — six environments mount", () => {
   it("keeps the six supported languages and defaults to a supported one", async () => {
     localStorage.removeItem(LOCALE_KEY);
     guardFetch();
-    const { root } = await mount("editorial");
+    const { root } = await mount("pocket");
     expect(LOCALES).toContain(root().getAttribute("lang"));
     expect(LOCALES).toEqual(["zh-CN", "en", "es", "fr", "de", "ja"]);
   });
@@ -262,7 +270,7 @@ describe("ui.skins — six environments mount", () => {
 
   it("renders the announcement region as a live region once there is a message", async () => {
     guardFetch();
-    const { container, root } = await mount("editorial");
+    const { container, root } = await mount("pocket");
     act(() => {
       root().dispatchEvent(new Event("noop"));
     });

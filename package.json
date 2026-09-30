@@ -2,7 +2,7 @@
   "name": "@qiaomu/dsh-radio",
   "version": "0.1.0",
   "private": true,
-  "description": "乔木电台 · DSH 插件：在 DeepSeek Harness 里收听全球直播电台，六种播放器环境、场景频道、本地口味记忆。",
+  "description": "乔木电台 · DSH 插件：在 DeepSeek Harness 里收听全球直播电台，五种播放器环境、场景频道、本地口味记忆。",
   "type": "module",
   "license": "GPL-3.0-or-later",
   "author": "向阳乔木 (https://x.com/vista8)",

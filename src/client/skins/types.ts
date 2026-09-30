@@ -21,5 +21,5 @@ export type SkinProps = {
 
 export type SkinRenderer = (props: SkinProps) => ReactNode;
 
-/** The six environment ids, in picker order. */
-export const SKIN_IDS: ThemeId[] = ["fantasy", "rams", "editorial", "pocket", "deck", "console"];
+/** The five environment ids, in picker order. */
+export const SKIN_IDS: ThemeId[] = ["fantasy", "rams", "pocket", "deck", "console"];

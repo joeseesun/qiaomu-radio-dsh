@@ -10,7 +10,7 @@
 export type MoodId = "unwind" | "focus" | "jazz" | "classical" | "energy" | "world";
 
 /** Player environment (skin) id. */
-export type ThemeId = "editorial" | "pocket" | "deck" | "console" | "rams" | "fantasy";
+export type ThemeId = "pocket" | "deck" | "console" | "rams" | "fantasy";
 
 /** Where a station list came from. */
 export type StationSource = "radio-browser" | "china-curated" | "regional" | "global-curated";

@@ -1,6 +1,6 @@
 # 乔木电台 · DSH 插件
 
-把 [乔木电台](https://radio.qiaomu.ai/) 的六种播放器环境搬进 DeepSeek Harness：发现并收听全球直播电台，
+把 [乔木电台](https://radio.qiaomu.ai/) 的五种播放器环境搬进 DeepSeek Harness：发现并收听全球直播电台，
 让音乐陪着你工作与阅读。
 
 **中文** | [English](#english) | [参考实现](../qiaomu-radio) · [在线电台](https://radio.qiaomu.ai/)
@@ -13,7 +13,7 @@
 
 | 能力 | 你得到什么 |
 | --- | --- |
-| 六种播放器环境 | 魔兽世界 3D、博朗 · 3D、极简、iPod、Winamp、foobar2000 |
+| 五种播放器环境 | 魔兽世界 3D、博朗 · 3D、iPod、Winamp、foobar2000 |
 | 全球电台目录 | Radio Browser 真实直播台；目录不可用时使用内置备用台单 |
 | 场景频道 | 松一口气 / 安静做事 / 爵士时刻 / 古典留白 / 需要能量 / 去远方 |
 | 本机口味记忆 | 喜欢、跳过、收听历史、电台可靠性，只存在本机 |
@@ -25,7 +25,7 @@
 ```text
 src/core/       纯逻辑：类型、主题、推荐、播放策略、手势数学    （可单测，无框架）
 src/host/       宿主服务：电台目录、播放地址、now playing、流代理、口味存储
-src/client/     浏览器界面：状态容器、播放引擎、六种皮肤、十二个屏幕页面
+src/client/     浏览器界面：状态容器、播放引擎、五种皮肤、十二个屏幕页面
 src/dsh/        DSH 接线：路由注册、页面渲染、Cordis 插件入口
 preview/        开发预览：与宿主同一套服务的本地服务器
 styles/         播放器样式
@@ -124,7 +124,7 @@ npm run preview
 参考实现里两款**实体 3D 皮肤**（`fantasy` 魔兽世界 / `rams` 博朗）已改成**真 three.js**：
 场景参数与几何逐值移植（`src/client/skins/three/`），观感差异经同条件像素差分收敛到中位数 0.0
 （差异只剩我们自己的机内屏幕文案）。原先的 CSS 3D 版本保留为 **WebGL 不可用时的回退**。
-另外四款（`editorial` / `deck` / `pocket` / `console`）本来就是 CSS/DOM，不涉及 3D。
+另外三款（`deck` / `pocket` / `console`）本来就是 CSS/DOM，不涉及 3D。
 three.js 只进宿主提供的播放器页（`lib/player/app.js`），**不进 harness 客户端半边**
 （`lib/client.js` 仍只依赖模块表里的 React），所以不违反客户端捆绑包只能依赖 React 的约束。
 Obsidian 专有 API（Notice、Modal、setIcon、requestUrl）全部替换为浏览器原生实现。
@@ -153,7 +153,7 @@ GitHub Actions 自动执行类型检查、测试和构建。依赖、生成产�
 
 ## English
 
-Qiaomu Radio brings six radio player environments to DeepSeek Harness, with global
+Qiaomu Radio brings five radio player environments to DeepSeek Harness, with global
 live stations, mood channels, playback controls, and locally stored preferences.
 
 Requires Node.js 22+ and npm for development, and DeepSeek Harness for integration.

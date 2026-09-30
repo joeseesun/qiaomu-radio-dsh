@@ -127,6 +127,7 @@ export type RadioController = {
 /** Only ids that exist in the catalog count; `getTheme` silently falls back. */
 function knownTheme(value: string | null | undefined): ThemeId | null {
   if (!value) return null;
+  if (value === "editorial") return "rams";
   return RADIO_THEMES.some((theme) => theme.id === value) ? (value as ThemeId) : null;
 }
 
