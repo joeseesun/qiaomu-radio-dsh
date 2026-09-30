@@ -256,3 +256,7 @@ export function createRadioService(options?: RadioServiceOptions): RadioService;
 ## 14. 实体屏内导航
 
 博朗/魔兽点击屏幕后在原屏幕平面渲染共用 HTML 导航，移除外置大面板与重复播放控件。场景接受可选 menuElement，句柄提供 menu(boolean)；打开时平滑聚焦屏幕，关闭恢复先前视角，减少动效时直接到位。返回逐级导航，Escape/关闭返回收听；选择电台返回 now 自动关闭。屏幕导航不改音频生命周期。拆解入口独立于菜单。
+
+## 15. 公开分发契约
+
+正式分发包含构建后的 host/client/player/HLS/GLB 与声明文件。prepack 执行构建并验证所有 exports 和必需资产；安装无需构建脚本。GitHub Topics/市场收录与软件包发布分别验收。当前发布从 main 构建，不包含其他工作区未提交的皮肤变更。

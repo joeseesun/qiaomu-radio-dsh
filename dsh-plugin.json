@@ -1,27 +1,53 @@
 {
   "id": "@qiaomu/dsh-radio",
   "name": "乔木电台",
-  "version": "0.1.0",
-  "summary": "在 DeepSeek Harness 里发现和收听全球直播电台：六种播放器环境、场景频道、本地口味记忆。",
+  "version": "0.1.1",
+  "summary": "在 DeepSeek Harness 里发现和收听全球直播电台：五种播放器环境、场景频道、本地口味记忆。",
   "halves": {
     "host": {
       "entry": "lib/index.js",
-      "inject": ["webServer"],
+      "inject": [
+        "webServer"
+      ],
       "role": "提供电台目录、播放地址解析、now playing 抓取、HLS 流代理，并注册播放器页面路由。"
     },
     "client": {
       "entry": "lib/client.js",
       "platform": "web",
-      "state": "预留：当前界面由宿主路由提供的独立播放器页面承载。"
+      "state": "已实现：通过侧栏入口打开宿主提供的播放器页面。"
     }
   },
   "routes": [
-    { "method": "GET", "path": "/qiaomu-radio/", "purpose": "独立播放器页面" },
-    { "method": "GET", "path": "/qiaomu-radio/<file>", "purpose": "播放器脚本与样式" },
-    { "method": "GET", "path": "/qiaomu-radio/stream/<encoded upstream>", "purpose": "HLS 播放列表与分片代理" },
-    { "method": "GET|POST", "path": "/qiaomu-radio/api/radio/catalog", "purpose": "电台目录" },
-    { "method": "GET|POST", "path": "/qiaomu-radio/api/radio/resolve-play", "purpose": "播放地址解析" },
-    { "method": "GET|POST", "path": "/qiaomu-radio/api/radio/now-playing", "purpose": "正在播放曲目" }
+    {
+      "method": "GET",
+      "path": "/qiaomu-radio/",
+      "purpose": "独立播放器页面"
+    },
+    {
+      "method": "GET",
+      "path": "/qiaomu-radio/<file>",
+      "purpose": "播放器脚本与样式"
+    },
+    {
+      "method": "GET",
+      "path": "/qiaomu-radio/stream/<encoded upstream>",
+      "purpose": "HLS 播放列表与分片代理"
+    },
+    {
+      "method": "GET|POST",
+      "path": "/qiaomu-radio/api/radio/catalog",
+      "purpose": "电台目录"
+    },
+    {
+      "method": "GET|POST",
+      "path": "/qiaomu-radio/api/radio/resolve-play",
+      "purpose": "播放地址解析"
+    },
+    {
+      "method": "GET|POST",
+      "path": "/qiaomu-radio/api/radio/now-playing",
+      "purpose": "正在播放曲目"
+    }
   ],
   "privacy": {
     "network": [

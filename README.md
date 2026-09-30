@@ -5,6 +5,18 @@
 
 **中文** | [English](#english) | [参考实现](../qiaomu-radio) · [在线电台](https://radio.qiaomu.ai/)
 
+## 安装正式包
+
+从 [GitHub Releases](https://github.com/joeseesun/qiaomu-radio-dsh/releases) 下载 `qiaomu-dsh-radio-0.1.1.tgz`。使用已配置的 Web 或 Desktop profile 安装（下面以 `web` 为例）：
+
+```bash
+dsh plugin --profile web add ./qiaomu-dsh-radio-0.1.1.tgz
+```
+
+重启对应 Harness，打开侧栏「乔木电台」。包内含编译产物、HLS 运行时和 3D 模型，安装时不需要构建。直播电台仍需联网。当前尚未发布 npm 包，请勿把包名安装当成已验证渠道。源码克隆供开发，不能代替正式包安装。
+
+![博朗屏内菜单](docs/screenshots/braun-menu.png)
+
 ## 这是什么
 
 一个 DSH 宿主侧插件。宿主半边用 `ctx.webServer` 注册自己的路由，并在这些路由上提供一个完整的
@@ -62,30 +74,13 @@ npm run build
 
 ```text
 lib/index.js            宿主半边（ESM，Node 20+）
-lib/client.js           浏览器半边（预留给 dsh.client 接线）
+lib/client.js           浏览器半边（侧栏入口）
 lib/player/app.js       播放器页面脚本
 lib/player/styles.css   播放器样式
 lib/player/hls.js       懒加载的 hls.js 运行时
 ```
 
-把本包安装进 profile 并在 `cordis.patch.yml` 里挂载：
-
-```yaml
-- name: "@qiaomu/dsh-radio"
-  config:
-    catalogTtlMs: 900000
-```
-
-安装命令（profile 目录内）：
-
-```bash
-node <harness>/runtime/pnpm/bin/pnpm.mjs add /绝对路径/qiaomu-radio-dsh
-```
-
-装好后打开 `http://127.0.0.1:<web 端口>/qiaomu-radio/` 即得到播放器页面（harness 开了
-浏览器信任校验，需带上 `dsh web` 打印的 `?token=…`）。挂载点在 `/qiaomu-radio` 而**不是**
-`/plugins/...`，因为 harness 的客户端 Bundle 路由持有整段 `/plugins` 前缀，会把别的载体遮蔽——
-这两点都有测试锁死，实测过程见 [交付说明](docs/DELIVERY.md) §2.5。
+正式包使用上文的 `dsh plugin --profile web add ./qiaomu-dsh-radio-0.1.1.tgz`。完整说明见 [安装与兼容范围](docs/INSTALL.md)。
 
 ## 隐私与网络
 
