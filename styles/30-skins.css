@@ -1706,3 +1706,28 @@
 .radio-root .physical-menu .device-search :is(label, input, button) { font-size: inherit; }
 .radio-root .physical-menu .device-search button { min-height: calc(44 * var(--physical-pixel, 1px)); }
 .radio-root .physical-menu .device-search p { font-size: .8em; }
+
+/* Braun rows stay separate; pointer hover and keyboard focus are distinct. */
+.radio-root .native-glass .physical-menu .screen-list {
+  display: grid;
+  gap: calc(4 * var(--physical-pixel, 1px));
+  padding: calc(4 * var(--physical-pixel, 1px));
+}
+.radio-root .native-glass .physical-menu .screen-list > button {
+  border-radius: calc(4 * var(--physical-pixel, 1px));
+}
+.radio-root .native-glass .physical-menu .screen-list > button:not(:disabled):not([data-selected="true"]):hover {
+  background: #ffffff14;
+}
+.radio-root .native-glass .physical-menu .screen-list > button[data-selected="true"] {
+  background: #34483d;
+  color: #e3edda;
+}
+.radio-root .native-glass .physical-menu :is(button,input,a):focus-visible {
+  outline: calc(2 * var(--physical-pixel, 1px)) solid #e4c78e;
+  outline-offset: calc(-3 * var(--physical-pixel, 1px));
+}
+.radio-root .native-glass .physical-menu .screen-list > button:focus-visible {
+  background: #34483d;
+  color: #e3edda;
+}

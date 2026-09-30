@@ -13,6 +13,12 @@ export function PhysicalMenu({ controller, target }: { controller: RadioControll
     if (content) content.scrollTop = 0;
     if (controller.page === "search") target.querySelector<HTMLInputElement>("input")?.focus({ preventScroll: true });
   }, [controller.page, target]);
+  useEffect(() => {
+    // Arrow navigation must move the DOM focus as well as the selected row.
+    if (target.querySelector(".screen-list")?.contains(document.activeElement)) {
+      target.querySelector<HTMLButtonElement>('.screen-list > button[data-selected="true"]')?.focus({ preventScroll: true });
+    }
+  }, [controller.selection, target]);
   const close = () => controller.openPage("now");
   return createPortal(h("div", {
     className: "physical-menu",
