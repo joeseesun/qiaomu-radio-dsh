@@ -478,14 +478,12 @@ export function useRadio(options: RadioMountOptions): RadioController {
     const station = currentRef.current;
     if (!station) return;
     setProfile((previous) => applyFeedback(previous, station, "like"));
-    setNotice("已记住这种声音。");
   }, []);
 
   const dislike = useCallback(() => {
     const station = currentRef.current;
     if (!station) return;
     setProfile((previous) => applyFeedback(previous, station, "dislike"));
-    setNotice("已减少这类电台，正在换一家。");
     setTimeout(() => next(), 120);
   }, [next]);
 
@@ -544,22 +542,9 @@ export function useRadio(options: RadioMountOptions): RadioController {
 
   const chooseTheme = useCallback(
     (nextThemeId: ThemeId) => {
-      const nextTheme = getTheme(nextThemeId);
-      playbackRunRef.current += 1;
-      stopStream();
-      setThemeId(nextTheme.id);
-      setMood(nextTheme.mood);
-      setSource(nextTheme.source);
-      setQuery("");
-      setCurrent(null);
-      setIsPlaying(false);
-      // Changing the environment keeps the page you were browsing: only an
-      // explicit `now` surface starts the new series by itself.
-      const browsing = pageRef.current !== "now";
-      if (!browsing) setNotice(`已切换到「${nextTheme.label}」，正在寻找这个系列的电台。`);
-      void fetchStations(nextTheme.mood, "", nextTheme.source, !browsing);
+      setThemeId(getTheme(nextThemeId).id);
     },
-    [fetchStations, stopStream],
+    [],
   );
 
   const retry = useCallback(() => {
@@ -680,7 +665,7 @@ export function useRadio(options: RadioMountOptions): RadioController {
     };
   }, []);
 
-  // The first catalog load is quiet: only a deliberate theme/channel click plays.
+  // The first catalog load is quiet: only a deliberate playback/channel action plays.
   const bootstrappedRef = useRef(false);
   useEffect(() => {
     if (bootstrappedRef.current) return;
