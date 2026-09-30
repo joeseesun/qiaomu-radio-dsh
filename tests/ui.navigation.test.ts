@@ -272,6 +272,30 @@ describe("ui.navigation — in-screen browsing", () => {
     expect(surface.host.played).toEqual([]);
   });
 
+  it("keeps the playing station, queue and media instance when changing skins", async () => {
+    const surface = await mount("editorial");
+    const play = surface.container.querySelector<HTMLButtonElement>('[aria-label="播放"]')!;
+    await act(async () => { play.click(); });
+    await settle();
+    const beforePlayed = [...surface.host.played];
+    const beforeRequests = surface.host.requests.length;
+    expect(beforePlayed.length).toBeGreaterThan(0);
+    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause");
+    const load = vi.spyOn(HTMLMediaElement.prototype, "load");
+    const trigger = surface.container.querySelector<HTMLButtonElement>(".theme-trigger")!;
+    await act(async () => { trigger.click(); });
+    const target = [...surface.container.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]')]
+      .find(item => item.textContent?.includes("iPod"))!;
+    await act(async () => { target.click(); });
+    await settle();
+    expect(surface.host.played).toEqual(beforePlayed);
+    expect(surface.host.requests).toHaveLength(beforeRequests);
+    expect(pause).not.toHaveBeenCalled();
+    expect(load).not.toHaveBeenCalled();
+    expect(surface.container.textContent).toContain("测试电台");
+    expect(surface.container.querySelector(".radio-notice")).toBeNull();
+  });
+
   it("switches the environment from the picker and keeps the page", async () => {
     vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("no network"))));
     const surface = await mount("editorial");

@@ -1197,7 +1197,7 @@
 /* ------------------------------------------- compact + presentation chrome --- */
 
 .radio-root[data-compact="true"] .radio-stage {
-  padding: 58px 12px 26px;
+  padding: 66px 12px;
 }
 
 .radio-root[data-compact="true"] .radio-notice {
@@ -1228,7 +1228,7 @@
 }
 
 .radio-root.listening-room[data-compact="true"][data-presentation="page"] {
-  min-height: 0;
+  min-height: 100svh;
 }
 
 /* --------------------------------------------------------------- focus --- */
@@ -1608,4 +1608,30 @@
     animation: none;
     transition: none;
   }
+}
+/* Fill the plugin viewport; retain physical device proportions. */
+.radio-root[data-presentation="page"] .radio-stage {
+  min-height: 100svh;
+}
+.radio-root[data-presentation="page"] :is(.skin-fantasy-3d, .skin-rams-3d) {
+  width: 100%;
+}
+.radio-root[data-presentation="page"] :is(.skin-fantasy-3d, .native-stage) {
+  height: calc(100svh - 132px);
+}
+.radio-root[data-presentation="page"] :is(.device-editorial, .classic-amp, .classic-foobar) {
+  width: 100%;
+}
+.radio-root[data-presentation="page"] :is(.device-editorial, .classic-amp, .classic-foobar) {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - 132px);
+}
+.radio-root[data-presentation="page"] .device-editorial .skin-faceplate {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.radio-root[data-presentation="page"] :is(.device-editorial, .classic-amp, .classic-foobar) .device-screen {
+  flex: 1 0 290px;
 }
