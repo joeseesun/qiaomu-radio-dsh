@@ -16,7 +16,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { FANTASY_MODEL_URL, FANTASY_RUNE_URL } from "../../core/modelAssets";
 import { h } from "../ui";
 import { FantasyFallback } from "./FantasyFallback";
-import { renderScreen, renderTransport, useScreen } from "./shared";
+import { PhysicalMenu } from "./PhysicalMenu";
 import { mountFantasyScene, type FantasyLines, type FantasySceneHandle } from "./three/fantasyScene";
 import type { FantasyAction } from "./three/fantasySurface";
 import type { SkinProps } from "./types";
@@ -38,9 +38,10 @@ export function FantasySkin(props: SkinProps): ReactNode {
   const [supported] = useState(hasWebGL);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [panel, setPanel] = useState(false);
+  const panel = controller.page !== "now";
+  const [menuElement] = useState(() => document.createElement("div"));
   const [announcement, setAnnouncement] = useState("");
-  const runtime = useScreen(controller);
+
 
   // 场景只挂载一次，但回调与文案必须是最新的：用可变 ref 而不是闭包快照，
   // 因为引擎在挂载时捕获 options 对象。
@@ -93,13 +94,14 @@ export function FantasySkin(props: SkinProps): ReactNode {
     const handle = mountFantasyScene(element, {
       modelUrl: FANTASY_MODEL_URL,
       labels,
+      menuElement,
       actions: {
         onToggle: () => live.current.controller.toggle(),
         onPrevious: () => live.current.controller.previous(),
         onNext: () => live.current.controller.next(),
         onLike: () => live.current.controller.like(),
         onVolume: (value) => live.current.controller.setVolume(value),
-        onScreenMenu: () => setPanel((open) => !open),
+        onScreenMenu: () => live.current.controller.openPage(live.current.controller.page === "now" ? "menu" : "now"),
       },
       announce: setAnnouncement,
       prefersReducedMotion: () => live.current.reducedMotion,
@@ -135,8 +137,8 @@ export function FantasySkin(props: SkinProps): ReactNode {
 
   // 机内屏幕回到"正在播放"页时收起面板（与参考实现一致）。
   useEffect(() => {
-    if (controller.page === "now") setPanel(false);
-  }, [controller.page]);
+    scene.current?.menu(panel);
+  }, [panel, ready]);
 
   if (!supported || failed) return h(FantasyFallback, props);
 
@@ -156,24 +158,7 @@ export function FantasySkin(props: SkinProps): ReactNode {
           h("span", null, controller.t("status.connecting")),
         )
       : null,
-    panel
-      ? h(
-          "div",
-          { className: "fantasy-panel", "data-fantasy-panel": "1" },
-          h(
-            "button",
-            {
-              type: "button",
-              className: "fantasy-panel-close",
-              "aria-label": controller.t("action.back"),
-              onClick: () => setPanel(false),
-            },
-            controller.t("action.back"),
-          ),
-          renderScreen(controller, runtime),
-          renderTransport(controller),
-        )
-      : null,
+    panel && ready ? h(PhysicalMenu, { controller, target: menuElement }) : null,
     h("span", { className: "native-sr", role: "status" }, announcement),
   );
 }

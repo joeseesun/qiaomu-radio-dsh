@@ -36,6 +36,7 @@ export type RamsScreen = {
 export type RamsVisual = { playing: boolean; muted: boolean; volume: number };
 
 export type RamsSceneOptions = {
+  menuElement?: HTMLElement;
   labels: { screen: string; power: string; volume: string; canvas: string };
   actions: {
     onToggle(): void;
@@ -54,6 +55,7 @@ export type RamsSceneOptions = {
 };
 
 export type RamsSceneHandle = {
+  menu(value: boolean): void;
   setScreen(screen: RamsScreen): void;
   setVisual(visual: RamsVisual): void;
   explode(value: boolean): void;
@@ -149,6 +151,11 @@ export function mountRamsScene(element: HTMLElement, options: RamsSceneOptions):
   const subtitleNode = line("span");
   const statusNode = line("small");
   screenElement.appendChild(screenRoot);
+  if (options.menuElement) {
+    options.menuElement.className = "physical-menu-mount";
+    options.menuElement.hidden = true;
+    screenElement.appendChild(options.menuElement);
+  }
   // 具名引用：dispose 必须移除**同一个**函数，否则监听器会留在已销毁的节点上。
   const onScreenClick = () => options.actions.onScreenMenu();
   screenRoot.addEventListener("click", onScreenClick);
@@ -182,6 +189,40 @@ export function mountRamsScene(element: HTMLElement, options: RamsSceneOptions):
     controls.target.set(...lookAt);
     controls.update();
     controls.enableDamping = damping;
+  };
+  let focused = false;
+  let framing = false;
+  let savedView: { position: THREE.Vector3; target: THREE.Vector3; atHome: boolean } | null = null;
+  const cameraGoal = camera.position.clone();
+  const targetGoal = controls.target.clone();
+  const focusScreen = () => {
+    options.menuElement?.style.setProperty("--physical-pixel", `${900 / Math.min(element.clientWidth * .84, 860)}px`);
+    const target = device.localToWorld(new THREE.Vector3(RADIO_SCREEN.x, RADIO_SCREEN.y, RADIO_SCREEN.z));
+    const distance = Math.max(.38, RADIO_SCREEN.width / (2 * Math.tan(THREE.MathUtils.degToRad(16)) * Math.min(camera.aspect * .84, 860 / Math.max(1, element.clientHeight))));
+    targetGoal.copy(target);
+    cameraGoal.copy(target).add(new THREE.Vector3(0, 0, distance));
+    framing = true;
+    controls.enabled = false;
+  };
+  const menu = (value: boolean) => {
+    if (focused === value) return;
+    focused = value;
+    screenRoot.hidden = value;
+    if (options.menuElement) options.menuElement.hidden = !value;
+    if (value) {
+      savedView = { position: camera.position.clone(), target: controls.target.clone(), atHome };
+      atHome = false;
+      expansionGoal = 0;
+      controls.minDistance = .1;
+      focusScreen();
+      queueMicrotask(() => { if (focused) options.menuElement?.querySelector<HTMLElement>(".skin-screen")?.focus({ preventScroll: true }); });
+    } else if (savedView) {
+      cameraGoal.copy(savedView.position);
+      targetGoal.copy(savedView.target);
+      atHome = savedView.atHome;
+      framing = true;
+      screenRoot.focus({ preventScroll: true });
+    }
   };
   const reset = () => {
     atHome = true;
@@ -363,6 +404,7 @@ export function mountRamsScene(element: HTMLElement, options: RamsSceneOptions):
     else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
       setVolume(visibleVolume + (event.key === "ArrowUp" ? 0.025 : -0.025));
     } else if (event.key === "Home") reset();
+    else if (event.key === "Enter") options.actions.onScreenMenu();
     else options.actions.onToggle();
   };
 
@@ -400,7 +442,8 @@ export function mountRamsScene(element: HTMLElement, options: RamsSceneOptions):
     css.setSize(rect.width, rect.height);
     camera.aspect = rect.width / rect.height;
     camera.updateProjectionMatrix();
-    if (atHome) {
+    if (focused) focusScreen();
+    else if (atHome) {
       camera.position.set(0.34, 0.22, homeDistance());
       controls.target.set(0, 0, 0);
       controls.update();
@@ -424,6 +467,16 @@ export function mountRamsScene(element: HTMLElement, options: RamsSceneOptions):
     const speed = reduced ? 1 : 0.18;
     const delta = Math.min(Math.max((time - previousFrame) / 1000, 0), 0.05);
     previousFrame = time;
+    if (framing) {
+      const alpha = reduced ? 1 : 1 - Math.exp(-delta * 16);
+      camera.position.lerp(cameraGoal, alpha);
+      controls.target.lerp(targetGoal, alpha);
+      if (camera.position.distanceTo(cameraGoal) < .001 && controls.target.distanceTo(targetGoal) < .001) {
+        framing = false;
+        controls.enabled = !focused;
+        controls.minDistance = focused ? .1 : 1.3;
+      }
+    }
     controls.update();
 
     expansion += (expansionGoal - expansion) * speed;
@@ -460,6 +513,7 @@ export function mountRamsScene(element: HTMLElement, options: RamsSceneOptions):
   });
 
   return {
+    menu,
     setScreen(next) {
       screen = next;
       applyScreen();

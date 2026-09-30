@@ -6,7 +6,7 @@ import { FantasySkin } from "../src/client/skins/FantasySkin";
 import type { SkinProps } from "../src/client/skins/types";
 const state = vi.hoisted(() => ({ options: null as any, dispose: vi.fn() }));
 vi.mock("../src/client/skins/three/fantasyScene", () => ({ mountFantasyScene: (_: unknown, options: unknown) => {
-  state.options = options; return { dispose: state.dispose, setLines() {}, setVisual() {} };
+  state.options = options; return { menu() {}, dispose: state.dispose, setLines() {}, setVisual() {} };
 } }));
 vi.mock("../src/client/skins/FantasyFallback", () => ({ FantasyFallback: () => createElement("div", {"data-fallback":true}) }));
 vi.mock("../src/client/skins/shared", () => ({useScreen: () => ({}),renderScreen: () => null,renderTransport: () => null}));

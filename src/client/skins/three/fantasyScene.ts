@@ -20,6 +20,7 @@
 import * as THREE from "three";
 import { createSurfaceSampler } from "./surfaceSampler";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { CSS3DObject, CSS3DRenderer } from "three/addons/renderers/CSS3DRenderer.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
@@ -49,6 +50,7 @@ export type FantasyVisual = {
 };
 
 export type FantasySceneOptions = {
+  menuElement?: HTMLElement;
   /** GLB 的 URL（宿主路由下的同源地址）。 */
   modelUrl: string;
   /** 每个实体按键的可访问名称，用于动效文案。 */
@@ -69,6 +71,7 @@ export type FantasySceneOptions = {
 };
 
 export type FantasySceneHandle = {
+  menu(value: boolean): void;
   setLines(lines: FantasyLines): void;
   setVisual(visual: FantasyVisual): void;
   reset(): void;
@@ -287,6 +290,17 @@ export function mountFantasyScene(
     },
   );
 
+  const css = new CSS3DRenderer();
+  css.domElement.className = "native-css-scene";
+  element.appendChild(css.domElement);
+  const cssScene = new THREE.Scene();
+  const menuGlass = options.menuElement ?? document.createElement("div");
+  menuGlass.className = "physical-menu-mount fantasy-menu-glass";
+  menuGlass.hidden = true;
+  const menuObject = new CSS3DObject(menuGlass);
+  menuObject.scale.setScalar(FANTASY_SCREEN.width / 900);
+  cssScene.add(menuObject);
+  let savedView: { position: THREE.Vector3; target: THREE.Vector3; atHome: boolean } | null = null;
   const cameraGoal = camera.position.clone();
   const targetGoal = controls.target.clone();
   let framing = false;
@@ -462,10 +476,11 @@ export function mountFantasyScene(
     setVolume(visibleVolume - Math.sign(event.deltaY) * 0.025, true);
   };
   const keyboard = (event: KeyboardEvent) => {
-    if (![" ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "m", "M", "Home"].includes(event.key)) return;
+    if (!["Enter", " ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "m", "M", "Home"].includes(event.key)) return;
     event.preventDefault();
     event.stopPropagation();
-    if (event.key === "Home") reset();
+    if (event.key === "Enter") options.actions.onScreenMenu();
+    else if (event.key === "Home") reset();
     else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
       setVolume(visibleVolume + (event.key === "ArrowUp" ? 0.025 : -0.025), true);
     } else {
@@ -482,6 +497,7 @@ export function mountFantasyScene(
   };
 
   renderer.domElement.tabIndex = 0;
+  renderer.domElement.setAttribute("aria-label", options.labels.screen);
   renderer.domElement.setAttribute("data-fantasy-canvas", "1");
   renderer.domElement.addEventListener("pointerdown", down, true);
   renderer.domElement.addEventListener("pointermove", move);
@@ -496,9 +512,10 @@ export function mountFantasyScene(
     const rect = element.getBoundingClientRect();
     if (rect.width < 1 || rect.height < 1) return;
     renderer.setSize(rect.width, rect.height);
+    css.setSize(rect.width, rect.height);
     camera.aspect = rect.width / rect.height;
     camera.updateProjectionMatrix();
-    if (focused) api.menu(true);
+    if (focused) focusScreen();
     else if (atHome) reset();
   });
   resize.observe(element);
@@ -537,18 +554,32 @@ export function mountFantasyScene(
     texture.needsUpdate = true;
   };
 
-  const api = {
-    menu(value: boolean) {
-      focused = value;
-      const closeDistance = () => Math.max(1.45, 0.6 / (Math.tan(THREE.MathUtils.degToRad(16)) * camera.aspect));
-      if (value) {
-        atHome = false;
-        frame(
-          new THREE.Vector3(FANTASY_SCREEN.x, FANTASY_SCREEN.y, closeDistance()),
-          new THREE.Vector3(FANTASY_SCREEN.x, FANTASY_SCREEN.y, 0.235),
-        );
-      } else reset();
-    },
+  const focusScreen = () => {
+    options.menuElement?.style.setProperty("--physical-pixel", `${900 / Math.min(element.clientWidth * .84, 860)}px`);
+    const position = display?.geometry.attributes.position;
+    let z = .3;
+    if (position) {
+      for (let i = 0; i < position.count; i++) z = Math.max(z, position.getZ(i));
+    }
+    const target = device.localToWorld(new THREE.Vector3(FANTASY_SCREEN.x, FANTASY_SCREEN.y, z + .008));
+    const distance = Math.max(.6, FANTASY_SCREEN.width / (2 * Math.tan(THREE.MathUtils.degToRad(16)) * Math.min(camera.aspect * .84, 860 / Math.max(1, element.clientHeight))));
+    frame(target.clone().add(new THREE.Vector3(0, 0, distance)), target);
+  };
+  const menu = (value: boolean) => {
+    if (focused === value) { if (value) focusScreen(); return; }
+    focused = value;
+    menuGlass.hidden = !value;
+    if (value) {
+      savedView = { position: camera.position.clone(), target: controls.target.clone(), atHome };
+      atHome = false;
+      controls.minDistance = .1;
+      focusScreen();
+      queueMicrotask(() => { if (focused) options.menuElement?.querySelector<HTMLElement>(".skin-screen")?.focus({ preventScroll: true }); });
+    } else if (savedView) {
+      atHome = savedView.atHome;
+      frame(savedView.position, savedView.target);
+      renderer.domElement.focus({ preventScroll: true });
+    }
   };
 
   let lastFrame = 0;
@@ -564,6 +595,7 @@ export function mountFantasyScene(
       if (camera.position.distanceTo(cameraGoal) < 0.001 && controls.target.distanceTo(targetGoal) < 0.001) {
         framing = false;
         controls.enabled = !focused;
+        controls.minDistance = focused ? .1 : 1;
       }
     }
     controls.update();
@@ -603,10 +635,16 @@ export function mountFantasyScene(
       lastDrawn = text;
     }
 
+    if (focused) {
+      menuObject.position.copy(targetGoal);
+      menuObject.quaternion.identity();
+    }
     renderer.render(scene, camera);
+    css.render(cssScene, camera);
   });
 
   return {
+    menu,
     setLines(next) {
       lines = next;
     },
@@ -642,6 +680,7 @@ export function mountFantasyScene(
       pmrem.dispose();
       renderer.dispose();
       renderer.domElement.remove();
+      css.domElement.remove();
     },
   };
 }
