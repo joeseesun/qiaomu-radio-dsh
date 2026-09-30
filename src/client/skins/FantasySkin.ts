@@ -83,9 +83,13 @@ export function FantasySkin(props: SkinProps): ReactNode {
   ]);
 
   useEffect(() => {
-    if (!supported) return;
+    if (!supported || failed) return;
     const element = host.current;
     if (!element) return;
+    let cancelled = false;
+    const timeout = setTimeout(() => {
+      if (!cancelled) setFailed(true);
+    }, 15_000);
     const handle = mountFantasyScene(element, {
       modelUrl: FANTASY_MODEL_URL,
       labels,
@@ -99,19 +103,22 @@ export function FantasySkin(props: SkinProps): ReactNode {
       },
       announce: setAnnouncement,
       prefersReducedMotion: () => live.current.reducedMotion,
-      onReady: () => setReady(true),
-      onFail: () => setFailed(true),
+      onReady: () => { clearTimeout(timeout); if (!cancelled) setReady(true); },
+      onFail: () => { clearTimeout(timeout); if (!cancelled) setFailed(true); },
     });
     if (!handle) {
+      clearTimeout(timeout);
       setFailed(true);
       return;
     }
     scene.current = handle;
     return () => {
+      cancelled = true;
+      clearTimeout(timeout);
       handle.dispose();
       scene.current = null;
     };
-  }, [supported, labels]);
+  }, [supported, labels, failed]);
 
   useEffect(() => {
     scene.current?.setLines(lines);

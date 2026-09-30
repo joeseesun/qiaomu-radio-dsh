@@ -112,7 +112,7 @@ const server = createServer((request, response) => {
   const url = new URL(request.url ?? "/", "http://localhost");
   // The host half hands out paths under its own plugin prefix; accept both that
   // form and the bare `/stream/...` form so the preview matches production.
-  const pathname = url.pathname.replace(/^\/plugins\/@qiaomu\/dsh-radio/, "") || "/";
+  const pathname = url.pathname.replace(/^\/qiaomu-radio(?=\/|$)/, "").replace(/^\/plugins\/@qiaomu\/dsh-radio/, "") || "/";
 
   void (async () => {
     try {

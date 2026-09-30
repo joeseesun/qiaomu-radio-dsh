@@ -45,6 +45,8 @@ await build({
   define: { "process.env.NODE_ENV": JSON.stringify(dev ? "development" : "production") },
 });
 
+await cp(join(root, "assets"), join(root, "preview-dist"), { recursive: true });
+
 await writeFile(join(root, "preview-dist/styles.css"), await collectCss(), "utf8");
 
 const hls = join(root, "node_modules/hls.js/dist/hls.light.min.js");

@@ -18,6 +18,7 @@
  */
 
 import * as THREE from "three";
+import { createSurfaceSampler } from "./surfaceSampler";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
@@ -30,7 +31,6 @@ import {
   fantasyActionAt,
   normalizeFantasyModel,
   surfacePatch,
-  surfacePoint,
   FANTASY_CONTROLS,
   FANTASY_SCREEN,
   FANTASY_SPEAKERS,
@@ -216,16 +216,17 @@ export function mountFantasyScene(
           }
         });
 
+        const sample = createSurfaceSampler(model);
         const screen = FANTASY_SCREEN;
         display = new THREE.Mesh(
-          surfacePatch(model, screen.x, screen.y, screen.width, screen.height, 32, 0.04),
+          surfacePatch(model, screen.x, screen.y, screen.width, screen.height, 32, 0.04, sample),
           new THREE.MeshBasicMaterial({ map: texture, toneMapped: false }),
         );
         device.add(display);
 
         for (const control of FANTASY_CONTROLS) {
           const patch = new THREE.Mesh(
-            surfacePatch(model, control.x, control.y, control.radius * 1.5, control.radius * 1.5, 12),
+            surfacePatch(model, control.x, control.y, control.radius * 1.5, control.radius * 1.5, 12, 0, sample),
             new THREE.MeshBasicMaterial({
               color: control.color,
               alphaMap: mask,
@@ -241,7 +242,7 @@ export function mountFantasyScene(
         }
 
         FANTASY_SPEAKERS.forEach((speaker, index) => {
-          const face = surfacePoint(model!, speaker.x, speaker.y);
+          const face = sample(speaker.x, speaker.y);
           if (!face) return;
           const glowCanvas = document.createElement("canvas");
           glowCanvas.width = glowCanvas.height = 128;
