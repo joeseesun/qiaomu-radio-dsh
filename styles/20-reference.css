@@ -1,0 +1,286 @@
+.radio-root, .radio-root *, .radio-root *::before, .radio-root *::after { box-sizing: border-box; }
+.radio-root { margin: 0; min-width: 0; }
+.radio-root button,
+.radio-root input { font: inherit; color: inherit; }
+.radio-root button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.radio-root button:disabled { opacity: .45; cursor: not-allowed; }
+.radio-root button:focus-visible,
+.radio-root input:focus-visible,
+.radio-root a:focus-visible { outline: 2px solid var(--ink, #516448); outline-offset: 3px; }
+.radio-root button:active { filter: brightness(.93); }
+.radio-root ::selection { background: #839570; color: white; }
+.radio-root.listening-room { --ink: #47543e; min-height: 100svh; display: flex; flex-direction: column; background: radial-gradient(ellipse at 0% 100%,#b4cdca88, transparent 54%),radial-gradient(ellipse at 100% 45%,#e0c6b988, transparent 52%),#e8e8e3; transition: background-color .2s; }
+.radio-root .skin-switcher { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 5px; padding: 24px 14px 14px; flex-shrink: 0; }
+.radio-root .skin-switcher button { min-height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 24px; background: transparent; font-size: 13px; font-weight: 500; color: #666d65; }
+.radio-root .skin-switcher button[aria-pressed="true"] { color: #313a30; border-color: #ffffffa8; background: #ffffff83; box-shadow: 0 2px 5px #45513b0a; }
+.radio-root .device-stage { flex: 1; display: grid; grid-template-columns: minmax(0,1fr); place-items: center; padding: 30px 20px 54px; }
+.radio-root .radio-device { width: min(100%,440px); position: relative; }
+.radio-root .device-screen { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.radio-root .screen-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 40px; flex-shrink: 0; border-bottom: 1px solid currentColor; padding: 0 12px; }
+.radio-root .screen-title > button { display: flex; align-items: center; gap: 5px; flex: 1; min-width: 0; min-height: 40px; padding: 0; background: none; border: 0; text-align: left; font-weight: 600; font-size: 14px; }
+.radio-root .screen-title > span { display: flex; }
+.radio-root .screen-content { flex: 1; overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: #849172 transparent; overscroll-behavior: contain; }
+.radio-root .now-playing { min-height: 100%; display: flex; flex-direction: column; padding: 16px 16px 0; }
+.radio-root .now-country { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; opacity: .8; }
+.radio-root .now-country span { font-size: 10px; }
+.radio-root .now-playing h1 { margin: 13px 0 0; font-size: clamp(20px,3.3vw,27px); line-height: 1.25; font-weight: 600; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.radio-root .now-tags { font-size: 12px; line-height: 1.55; opacity: .76; margin: 9px 0 13px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.radio-root .now-bottom { display: flex; gap: 12px; justify-content: space-between; margin-top: auto; align-items: center; font-size: 10px; }
+.radio-root .signal-state { display: flex; align-items: center; gap: 6px; }
+.radio-root .signal-state i { width: 5px; height: 5px; background: currentColor; opacity: .4; border-radius: 50%; }
+.radio-root .signal-state i.live { opacity: 1; }
+.radio-root .track-actions { display: flex; justify-content: flex-end; gap: 3px; padding: 0 12px; flex-shrink: 0; }
+.radio-root .track-actions button { display: inline-flex; justify-content: center; align-items: center; gap: 6px; min-width: 44px; min-height: 44px; border: 0; background: none; font-size: 12px; }
+.radio-root .track-actions button:first-child { margin-right: auto; }
+.radio-root .device-volume { display: flex; align-items: center; gap: 10px; min-height: 38px; padding: 0 14px; border-top: 1px solid #65765755; font-size: 10px; flex-shrink: 0; }
+.radio-root .device-volume input { min-width: 0; width: 100%; height: 24px; accent-color: var(--ink); }
+.radio-root .device-volume span { min-width: 29px; text-align: right; }
+.radio-root .device-message { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; font-size: 11px; line-height: 1.5; display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-top: 1px solid #63705566; max-height: 90px; overflow-y: auto; flex-shrink: 0; }
+.radio-root .device-message span { flex: 1; }
+.radio-root .device-message button { background: transparent; border: 0; text-decoration: underline; min-height: 44px; min-width: 44px; }
+.radio-root .screen-list { padding: 4px 0; }
+.radio-root .screen-list > button { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-height: 44px; border: 0; padding: 8px 14px; background: transparent; text-align: left; font-size: 14px; }
+.radio-root .screen-list > button > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.radio-root .screen-list > button > svg { flex-shrink: 0; }
+.radio-root .screen-list > button[data-selected="true"] { color: var(--selected-text,#d5dfbf); background: var(--ink); }
+.radio-root .device-empty { margin: 20px 16px; font-size: 14px; line-height: 1.65; opacity: .8; }
+.radio-root .device-search { padding: 16px; font-size: 13px; }
+.radio-root .device-search label { display: block; margin-bottom: 8px; }
+.radio-root .device-search > div { display: flex; border: 1px solid currentColor; border-radius: 3px; }
+.radio-root .device-search input { width: 100%; min-width: 0; background: transparent; border: 0; padding: 8px; outline-offset: -3px; font-size: 14px; }
+.radio-root .device-search > div button { flex-shrink: 0; width: 44px; height: 44px; border: 0; background: transparent; }
+.radio-root .device-search p { font-size: 11px; opacity: .7; }
+.radio-root .source-choice { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 44px; padding: 4px 0; background: none; border: 0; border-bottom: 1px solid #68745844; }
+.radio-root .device-info { padding: 16px; font-size: 13px; line-height: 1.65; }
+.radio-root .device-info h2 { font-size: 18px; margin: 0; }
+.radio-root .device-info a { display: flex; align-items: center; gap: 7px; min-height: 40px; color: inherit; }
+.radio-root .device-signature { font-size: 8px; text-align: center; letter-spacing: .26em; opacity: .55; }
+.radio-root .device-pocket { width: min(100%,420px); padding: 35px 34px 18px; border: 1px solid #c6c9c2; border-radius: 48px; background: linear-gradient(120deg,#fff 8%,#f8f9f6 56%,#e7eae5); box-shadow: inset 2px 3px 3px #fff,inset -5px -7px 10px #b4b9b655,0 25px 30px -12px #535f4e4d,0 50px 80px -30px #5c655540; }
+.radio-root .theme-picker { position: absolute; z-index: 20; top: 22px; right: 24px; color: #697066; }
+.radio-root .theme-trigger { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #79837125; border-radius: 50%; background: #ffffff45; color: inherit; }
+.radio-root .theme-popover { position: absolute; top: 54px; right: 0; width: 180px; padding: 6px; border: 1px solid #c9ccc4; border-radius: 12px; background: #f7f8f2; color: #3d4538; box-shadow: 0 12px 40px #2f38282b; }
+.radio-root .theme-popover button { width: 100%; min-height: 44px; display: flex; align-items: center; gap: 12px; border: 0; border-radius: 7px; padding: 8px 12px; background: none; font-size: 13px; text-align: left; }
+.radio-root .theme-popover button[aria-checked="true"] { background: #e3e8dc; }
+.radio-root .theme-popover button > span:nth-child(2) { flex: 1; }
+.radio-root .theme-dot { width: 12px; height: 12px; border-radius: 3px; background: #c2c7ba; }
+.radio-root .dot-pocket { background: #afbc91; }
+.radio-root .dot-deck { background: #515b70; }
+.radio-root .dot-console { background: #b7bec4; }
+.radio-root .device-stage { padding-top: 66px; }
+.radio-root.room-deck .theme-trigger,
+.radio-root.room-console .theme-trigger { background: #ffffff0d; color: #d5dadf; border-color: #ffffff20; }
+.radio-root .device-engraving { font: 500 11px/1 -apple-system,sans-serif; color: #959d8c; letter-spacing: .06em; margin: -8px 0 20px 8px; }
+.radio-root .device-pocket .device-screen { height: 288px; border: 7px solid #8d9687; border-radius: 9px; color: #3e4931; background: #c9d4ad; box-shadow: inset 3px 4px 8px #49583b44,0 0 0 2px #c6cbbd; font-family: "Courier New", "PingFang SC", monospace; }
+.radio-root .device-pocket .screen-title { border-color: #77816b; }
+.radio-root .device-pocket .screen-title button { font-family: inherit; }
+.radio-root .device-pocket .device-volume input { height: 22px; }
+.radio-root .ipod-wheel { width: 230px; height: 230px; position: relative; margin: 32px auto 22px; border: 1px solid #d7dcd2; border-radius: 50%; background: linear-gradient(135deg,#e9ece5,#e2e6dd); box-shadow: inset 1px 2px 6px #a3ab9b2b,0 1px 1px #fff; }
+.radio-root .ipod-wheel button { position: absolute; display: flex; align-items: center; justify-content: center; padding: 0; min-width: 48px; min-height: 48px; border: 0; background: none; color: #909986; }
+.radio-root .ipod-wheel .wheel-menu { top: 3px; left: calc(50% - 40px); width: 80px; font-size: 14px; font-weight: 600; }
+.radio-root .wheel-left { left: 3px; top: calc(50% - 24px); }
+.radio-root .wheel-right { right: 3px; top: calc(50% - 24px); }
+.radio-root .wheel-bottom { bottom: 3px; left: calc(50% - 24px); gap: 0; }
+.radio-root .ipod-wheel .wheel-center { width: 88px; height: 88px; min-width: 0; min-height: 0; top: calc(50% - 44px); left: calc(50% - 44px); border: 1px solid #c4ccbc; border-radius: 50%; background: linear-gradient(135deg,#fafbf7,#f0f3eb); box-shadow: 0 2px 4px #858f7622; }
+.radio-root .device-pocket .device-signature { color: #8b957e; }
+.radio-root .window-title { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; font-size: 11px; letter-spacing: .07em; }
+.radio-root .window-title > span:last-child { font-size: 9px; opacity: .65; }
+.radio-root .device-navigation { display: flex; align-items: center; justify-content: space-around; gap: 2px; padding: 3px 10px; }
+.radio-root .device-navigation button { min-height: 44px; min-width: 44px; padding: 6px; border: 1px solid transparent; background: transparent; display: grid; place-items: center; }
+.radio-root .device-navigation button[aria-pressed="true"] { border-color: currentColor; border-radius: 4px; }
+.radio-root .device-transport { display: flex; align-items: center; justify-content: center; gap: 22px; padding: 18px; }
+.radio-root .device-transport button { width: 46px; height: 46px; display: grid; place-items: center; border: 1px solid #ffffff22; border-radius: 6px; background: transparent; }
+.radio-root .device-transport .transport-play { width: 58px; height: 58px; }
+.radio-root .device-editorial { --ink: #3d6355; background: #f8f7f1; padding: 12px 18px 20px; border: 1px solid #cfcec4; border-radius: 20px; box-shadow: 0 25px 60px -20px #494e4a40; }
+.radio-root .device-editorial .device-screen { height: 290px; margin: 12px 0 0; }
+.radio-root .device-editorial h1 { font-family: Georgia,"Songti SC",serif; font-size: 31px; font-weight: 400; }
+.radio-root .device-editorial .screen-title { border-color: #aeb9ad66; }
+.radio-root .device-editorial .transport-play { color: white; background: #3d6355; border-radius: 50%; }
+.radio-root .device-editorial .device-signature { margin-top: 5px; }
+.radio-root.room-deck { --ink: #d1eb72; background: #232630; color: #d8dde7; color-scheme: dark; }
+.radio-root.room-deck .skin-switcher button,
+.radio-root.room-console .skin-switcher button { color: #b5bbc5; }
+.radio-root.room-deck .skin-switcher button[aria-pressed="true"],
+.radio-root.room-console .skin-switcher button[aria-pressed="true"] { color: #eff0f1; border-color: #ffffff30; background: #ffffff0d; }
+.radio-root .device-deck { --selected-text: #141b16; width: min(100%,440px); border: 3px ridge #72808d; background: #343a49; padding: 5px 8px 10px; box-shadow: 2px 2px 0 #070a13,0 28px 65px #090b1388; font-family: "Courier New","PingFang SC",monospace; color: #cbd4e2; }
+.radio-root .device-deck .window-title { height: 26px; padding: 0 8px; color: #e7e9ec; background: repeating-linear-gradient(0deg,#545f73 0 1px,#2c3446 1px 3px); font-weight: 600; letter-spacing: .18em; }
+.radio-root .device-deck .device-navigation { padding: 4px 0; }
+.radio-root .device-deck .device-navigation button[aria-pressed="true"] { background: #202734; border-color: #8b9aa1; border-radius: 0; }
+.radio-root .device-deck .device-screen { height: 318px; background: #101911; color: #c6e571; border: 3px inset #778498; }
+.radio-root .device-deck .screen-title { border-color: #566241; }
+.radio-root .device-deck .screen-title button { font-family: inherit; }
+.radio-root .device-deck h1 { font-size: 22px; }
+.radio-root .device-deck .track-actions button { color: #cfdf99; }
+.radio-root .device-deck .device-volume { border-color: #566241; }
+.radio-root .device-deck .device-transport { padding: 14px 6px; gap: 6px; }
+.radio-root .device-deck .device-transport button { flex: 1; border: 2px outset #8d97a8; border-radius: 2px; height: 44px; color: #e5e8ee; background: linear-gradient(#667287,#424c61); }
+.radio-root .device-deck .device-signature { font-size: 7px; letter-spacing: .1em; }
+.radio-root .spectrum { display: flex; align-items: end; gap: 3px; height: 50px; margin: 3px 0 13px; flex-shrink: 0; }
+.radio-root .spectrum i { flex: 1; height: var(--level); background: repeating-linear-gradient(to top,#9fcb42 0 3px,transparent 3px 4px); opacity: .3; transform-origin: bottom; }
+.radio-root .spectrum.active i { opacity: 1; animation: equalizer .8s steps(4,end) var(--delay) infinite alternate; }
+.radio-root.room-console { --ink: #9eb7c2; background: #373b3e; color-scheme: dark; }
+.radio-root .device-console { --ink: #bdd4e1; --selected-text: #212a30; width: min(100%,520px); border: 1px solid #111a20; border-radius: 5px; color: #dce2e5; background: #252a2e; box-shadow: 0 24px 70px #0005; }
+.radio-root .device-console .window-title { background: #464d52; font-size: 12px; border-radius: 4px 4px 0 0; }
+.radio-root .device-console .device-navigation { border-bottom: 1px solid #535a5d; }
+.radio-root .device-console .device-navigation button[aria-pressed="true"] { background: #4b555b; border-color: #778d99; border-radius: 2px; }
+.radio-root .device-console .device-screen { height: 325px; background: #1c2023; }
+.radio-root .device-console .screen-title { background: #2f353a; border-color: #535a5d; }
+.radio-root .device-console h1 { font-size: 26px; line-height: 1.3; }
+.radio-root .device-console .device-volume { background: #30373b; border-color: #535a5d; }
+.radio-root .device-console .device-transport { border-top: 1px solid #535a5d; padding: 12px; }
+.radio-root .device-console .device-transport button { height: 44px; border-color: #606d75; border-radius: 2px; background: #3c454c; }
+.radio-root .device-console .device-signature { letter-spacing: .02em; padding: 8px; border-top: 1px solid #535a5d; }
+@keyframes equalizer { from { transform: scaleY(.4); } to { transform: scaleY(1); } }
+.radio-root .spinner { animation: spin .9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (hover:hover) {
+.radio-root .skin-switcher button:hover { background: #ffffff22; }
+.radio-root .track-actions button:hover,
+.radio-root .device-navigation button:hover { opacity: .75; }
+}
+@media (max-width:520px) {
+.radio-root .skin-switcher { padding: 12px 6px 4px; gap: 0; }
+.radio-root .skin-switcher button { padding: 0 12px; font-size: 12px; }
+.radio-root .device-stage { padding: 22px 20px 30px; }
+.radio-root .device-pocket { padding: 27px 24px 16px; border-radius: 39px; }
+.radio-root .device-pocket .device-screen { height: 276px; border-width: 6px; }
+.radio-root .device-engraving { margin-bottom: 17px; }
+.radio-root .ipod-wheel { width: 214px; height: 214px; margin: 25px auto 18px; }
+.radio-root .device-pocket .now-playing { padding: 12px 12px 0; }
+.radio-root .now-playing h1 { font-size: 22px; }
+.radio-root .now-tags { font-size: 11px; }
+.radio-root .device-volume { padding: 0 10px; }
+}
+@media (max-width:360px) {
+.radio-root .device-stage { padding-inline: 12px; }
+.radio-root .skin-switcher button { padding: 0 10px; }
+.radio-root .device-pocket { padding-inline: 20px; }
+.radio-root .ipod-wheel { width: 196px; height: 196px; }
+.radio-root .device-navigation { padding-inline: 0; }
+.radio-root .device-navigation button { min-width: 40px; }
+}
+.radio-root .classic-amp,
+.radio-root .classic-foobar { width: min(100%,560px); overflow: hidden; font: 12px/1.4 Arial,"PingFang SC",sans-serif; box-shadow: 0 28px 65px #0005; }
+.radio-root .classic-title { display: flex; align-items: center; gap: 10px; height: 28px; padding: 0 8px; }
+.radio-root .classic-title strong { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; }
+.radio-root .classic-title button { border: 0; background: none; min-width: 30px; }
+.radio-root .classic-transport { display: flex; gap: 2px; }
+.radio-root .classic-transport button { width: 34px; height: 30px; display: grid; place-items: center; padding: 0; }
+.radio-root .classic-volume { display: flex; align-items: center; gap: 7px; }
+.radio-root .classic-volume input { min-width: 0; width: 100%; accent-color: #8ea878; }
+.radio-root .classic-playlist { height: 286px; display: flex; flex-direction: column; }
+.radio-root .playlist-columns,
+.radio-root .playlist-scroll>button { display: grid; grid-template-columns: 28px minmax(0,1fr) 80px 48px; gap: 7px; text-align: left; padding: 6px 8px; }
+.radio-root .playlist-columns { font-size: 10px; opacity: .7; }
+.radio-root .playlist-scroll { overflow: auto; flex: 1; scrollbar-width: thin; }
+.radio-root .playlist-scroll>button { width: 100%; border: 0; background: none; font: inherit; min-height: 30px; }
+.radio-root .playlist-scroll span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.radio-root .classic-status { display: flex; justify-content: space-between; gap: 12px; padding: 5px 8px; font-size: 10px; }
+.radio-root .classic-status span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.radio-root .classic-status span:last-child { flex-shrink: 0; }
+.radio-root .classic-panel .device-screen { height: 286px; }
+.radio-root .classic-notice { padding: 7px 10px; font-size: 11px; }
+.radio-root .classic-notice button { margin-left: 8px; }
+.radio-root .classic-amp { width: min(100%,440px); border: 3px ridge #8990a0; background: #313344; color: #bcbecf; padding: 3px; font-family: "Courier New","PingFang SC",monospace; }
+.radio-root .classic-amp .classic-title { height: 20px; background: repeating-linear-gradient(0deg,#76788b 0 1px,#282a3b 1px 3px); color: #e7dabb; letter-spacing: .18em; text-align: center; font-size: 11px; }
+.radio-root .classic-amp .classic-title strong { flex: none; background: #303243; padding: 0 8px; margin: auto; }
+.radio-root .amp-main { display: grid; grid-template-columns: 38% 1fr; gap: 8px; padding: 9px 5px 3px; }
+.radio-root .amp-led { background: #080f0c; border: 2px inset #777987; padding: 6px; color: #9bdd68; }
+.radio-root .amp-led-time { display: block; font: 36px/1 "Courier New",monospace; letter-spacing: -2px; text-shadow: 0 0 8px #82b55640; }
+.radio-root .classic-spectrum { display: flex; gap: 2px; align-items: end; height: 29px; margin-top: 6px; }
+.radio-root .classic-spectrum i { flex: 1; height: 15%; background: repeating-linear-gradient(to top,#67a951 0 2px,transparent 2px 3px); }
+.radio-root .classic-spectrum.active i { height: var(--level); animation: equalizer .8s steps(4,end) var(--delay) infinite alternate; }
+.radio-root .amp-info { min-width: 0; }
+.radio-root .amp-track { background: #080f0c; border: 2px inset #777987; color: #a0dc75; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 3px 5px; font-size: 12px; }
+.radio-root .amp-codec { padding: 6px 0 3px; font-size: 10px; }
+.radio-root .amp-codec b { background: #0f1715; color: #a9d382; padding: 1px 4px; font-weight: 400; }
+.radio-root .amp-info .classic-volume { height: 20px; }
+.radio-root .amp-toggles { display: flex; gap: 5px; margin-top: 4px; }
+.radio-root .amp-toggles button,
+.radio-root .amp-library { font-size: 10px; border: 1px outset #888b99; background: #53586b; padding: 2px 8px; color: #e0e2e9; }
+.radio-root .amp-transports { display: flex; justify-content: space-between; padding: 7px 5px; gap: 6px; }
+.radio-root .classic-amp .classic-transport button { background: linear-gradient(#b4bdc7,#788496); border: 2px outset #b5bfcc; color: #293b49; }
+.radio-root .amp-section-label { text-align: center; font-size: 10px; letter-spacing: .2em; background: repeating-linear-gradient(0deg,#6e7386 0 1px,#303344 1px 3px); color: #e0d9ba; margin: 2px 0 4px; }
+.radio-root .classic-amp .classic-playlist,
+.radio-root .classic-amp .classic-panel { border: 2px inset #777987; color: #a2d279; background: #0b100c; }
+.radio-root .classic-amp .playlist-scroll>button.current-row { background: #253146; color: #fff; }
+.radio-root .classic-amp .playlist-columns { border-bottom: 1px solid #263222; }
+.radio-root .classic-amp .device-screen { color: #a2d279; --ink: #a2d279; --selected-text: #122010; }
+.radio-root .classic-foobar { width: min(100%,740px); border: 1px solid #17191b; border-radius: 4px; background: #292929; color: #dedede; --ink: #b0bec8; }
+.radio-root .classic-foobar .classic-title { background: #363636; height: 34px; }
+.radio-root .foobar-menu { display: flex; border-bottom: 1px solid #151515; padding: 1px 4px; }
+.radio-root .foobar-menu button { background: transparent; border: 0; font-size: 12px; padding: 5px 8px; }
+.radio-root .foobar-toolbar { display: flex; align-items: center; gap: 12px; padding: 7px; }
+.radio-root .classic-foobar .classic-transport button,
+.radio-root .classic-search-button { background: #383838; border: 1px solid #555; border-radius: 2px; }
+.radio-root .classic-search-button { height: 30px; }
+.radio-root .foobar-toolbar .classic-volume { margin-left: auto; width: 150px; }
+.radio-root .foobar-tabs { display: flex; border-bottom: 1px solid #626262; padding: 4px 7px 0; gap: 2px; }
+.radio-root .foobar-tabs button { background: #323232; border: 1px solid #494949; border-bottom: 0; padding: 5px 12px; font-size: 11px; }
+.radio-root .foobar-tabs button[aria-pressed=true] { background: #555; }
+.radio-root .classic-foobar .classic-playlist { height: 350px; margin: 5px; background: #202020; border: 1px solid #171717; }
+.radio-root .classic-foobar .playlist-columns { background: #303030; opacity: 1; border-bottom: 1px solid #474747; }
+.radio-root .classic-foobar .playlist-scroll>button { min-height: 28px; }
+.radio-root .classic-foobar .playlist-scroll>button:nth-child(even) { background: #ffffff03; }
+.radio-root .classic-foobar .playlist-scroll>button.current-row { background: #485867; color: white; }
+.radio-root .classic-foobar .classic-status { border-top: 1px solid #555; }
+/* The console playlist carries BOTH roles on one element (`.classic-playlist` +
+   `.device-screen`). The reference keeps them on separate elements, so its 360px
+   device-screen height never reaches the playlist; without the `:not()` this
+   rule wins on source order and inflates the playlist 350px → 360px, dragging
+   `overflow:hidden` in with it. Measured against the reference: the playlist
+   box is 728x350 and its scroller is 321px, not 331px. */
+.radio-root .classic-foobar .device-screen:not(.classic-playlist) { height: 360px; --ink: #b5c6cf; --selected-text: #20272b; }
+.radio-root.room-editorial { background: #eeeae2; }
+.radio-root .device-editorial { --ink: #45483f; width: min(100%,420px); border-radius: 3px; padding: 18px 24px 20px; background: #f7f5ee; border-color: #d8d5cb; box-shadow: 0 2px 3px #514d4210,0 22px 50px -22px #514d4240; }
+.radio-root .device-editorial .window-title { letter-spacing: .15em; font-size: 10px; }
+.radio-root .device-editorial .device-navigation { margin-top: 14px; opacity: .7; }
+.radio-root .device-editorial .device-screen { margin-top: 20px; height: 300px; }
+.radio-root .device-editorial .now-playing { padding: 22px 0 0; }
+.radio-root .device-editorial h1 { font-family: Georgia,"Songti SC",serif; font-size: 34px; line-height: 1.2; }
+.radio-root .device-editorial .screen-title { padding: 0; border-color: #d4d2c9; }
+.radio-root .device-editorial .track-actions,
+.radio-root .device-editorial .device-volume { padding-inline: 0; }
+.radio-root .device-editorial .device-transport { padding-top: 26px; }
+.radio-root .device-editorial .transport-play { background: #d86b43; box-shadow: 0 4px 10px #af633228; }
+.radio-root .device-editorial .device-signature { color: #898a80; }
+@media(max-width:520px) {
+.radio-root .device-stage { padding-top: 74px; }
+.radio-root .theme-picker { top: 14px; right: 14px; }
+.radio-root .classic-foobar .classic-transport button { width: 29px; }
+.radio-root .foobar-toolbar { gap: 7px; }
+.radio-root .foobar-toolbar .classic-volume { width: 80px; }
+.radio-root .playlist-columns,
+.radio-root .playlist-scroll>button { grid-template-columns: 22px minmax(0,1fr) 53px 37px; gap: 4px; font-size: 11px; }
+.radio-root .amp-led-time { font-size: 30px; }
+.radio-root .device-editorial { padding-inline: 20px; }
+}
+.radio-root.room-rams { background: radial-gradient(ellipse at 50% 35%,#f6f4ec,#e3e2d8 75%); --ink: #5b6554; }
+.radio-root .rams-view { width: 100%; height: clamp(300px,48vw,480px); cursor: grab; touch-action: none; }
+.radio-root .rams-view:active { cursor: grabbing; }
+.radio-root .rams-view canvas { display: block; }
+.radio-root .dot-rams { background: #c36a35; }
+.radio-root.room-fantasy { background: radial-gradient(ellipse at 28% 35%,#54281755,transparent 46%),radial-gradient(ellipse at 72% 38%,#123e7455,transparent 48%),#121317; color-scheme: dark; --ink: #e5a948; }
+.radio-root.room-fantasy .theme-trigger { background: #17191dcc; color: #e3b86d; border-color: #d89f4855; }
+.radio-root .dot-fantasy { background: linear-gradient(135deg,#ef6a24 0 48%,#2a89e9 52%); }
+.radio-root .support-panel { min-height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 13px; padding: 18px; text-align: center; }
+.radio-root .support-panel h2,
+.radio-root .support-panel p { margin: 0; }
+.radio-root .support-panel h2 { font-size: 1.1em; }
+.radio-root .support-panel p { opacity: .72; font-size: .72em; line-height: 1.55; }
+.radio-root .support-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.radio-root .support-actions button { min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid color-mix(in srgb,currentColor 25%,transparent); border-radius: 10px; background: color-mix(in srgb,currentColor 7%,transparent); color: inherit; }
+.radio-root .support-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 15px; }
+.radio-root .support-links a { display: inline-flex; align-items: center; gap: 5px; color: inherit; font-size: .68em; text-decoration: none; opacity: .78; }
+.radio-root .support-modal { position: absolute; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 20px; background: #0d1015b8; backdrop-filter: blur(12px); }
+.radio-root .support-modal>section { position: relative; width: min(100%,390px); max-height: min(680px,calc(100svh - 40px)); overflow: auto; padding: 28px; border: 1px solid #d8b97866; border-radius: 20px; background: #171b21; color: #eee2cc; text-align: center; box-shadow: 0 28px 80px #0008; }
+.radio-root .support-modal h2 { margin: 0 40px 18px; font-size: 22px; }
+.radio-root .support-modal img { display: block; width: min(100%,280px); max-height: 48svh; margin: auto; object-fit: contain; border-radius: 12px; background: #fff; }
+.radio-root .support-modal p { margin: 16px 0 0; line-height: 1.6; }
+.radio-root .support-close { position: absolute; top: 12px; right: 12px; width: 42px; height: 42px; display: grid; place-items: center; border: 0; border-radius: 50%; background: #ffffff0d; color: inherit; }
+.radio-root .support-modal-links { display: flex; justify-content: center; gap: 18px; margin-top: 14px; }
+.radio-root .support-modal-links a { display: inline-flex; align-items: center; gap: 6px; color: #e4c786; text-decoration: none; }
+.radio-root .support-actions button:focus-visible,
+.radio-root .support-links a:focus-visible,
+.radio-root .support-close:focus-visible,
+.radio-root .support-modal-links a:focus-visible { outline: 2px solid #d6a752; outline-offset: 3px; }
+.radio-root .support-panel svg { flex: 0 0 auto; }

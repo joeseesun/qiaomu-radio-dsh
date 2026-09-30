@@ -1,0 +1,11 @@
+node_modules/
+lib/
+preview-dist/
+coverage/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+AGENTS.md
