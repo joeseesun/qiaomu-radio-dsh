@@ -1,0 +1,1611 @@
+/*
+ * 乔木电台 · DSH 插件 — 30-skins.css
+ * Loaded last, so these rules also own the dark, compact, focus and
+ * reduced-motion overrides that have to win against 20-reference.css.
+ *
+ * The two physical environments are pure CSS 3D: a `preserve-3d` faceplate, a
+ * drilled grille, an inset glass and machined knobs. No WebGL, no three.js. The
+ * screen inside the glass is the reference's fixed design surface (900x250 for
+ * the Braun radio, 780x268 for the fantasy console) scaled by `--screen-scale`,
+ * which `useDesignScale()` publishes from the measured glass width.
+ */
+
+/* -------------------------------------------------------- theme picker --- */
+
+.radio-root .theme-picker {
+  transition: opacity 180ms ease-out;
+}
+
+.radio-root .theme-picker.is-asleep:not(:focus-within):not(:hover) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------- row + status details --- */
+
+.radio-root .screen-list > button {
+  gap: 0.5em;
+}
+
+.radio-root .row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.radio-root .row-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.radio-root .row-note {
+  font-size: 0.72em;
+  font-style: normal;
+  line-height: 1.3;
+  opacity: 0.72;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.radio-root .screen-list > button[data-selected="true"] .row-note {
+  opacity: 0.85;
+}
+
+.radio-root .row-accent {
+  flex: 0 0 auto;
+  width: 0.8em;
+  height: 0.8em;
+  margin-right: 0.3em;
+  border-radius: 3px;
+}
+
+.radio-root .row-check {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  margin-right: 0.3em;
+  opacity: 0.9;
+}
+
+.radio-root .screen-status {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6em;
+  opacity: 0.75;
+}
+
+.radio-root .screen-enter {
+  transform: rotate(180deg);
+}
+
+.radio-root .device-volume .volume-mute {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  min-height: 26px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+.radio-root .support-qr-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 96px;
+  padding: 10px;
+  border: 1px dashed currentColor;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: center;
+  opacity: 0.85;
+}
+
+/* --------------------------------------------------------------- dock --- */
+
+.radio-root .skin-dock {
+  display: none;
+}
+
+.radio-root[data-theme="rams"] .skin-dock,
+.radio-root[data-theme="fantasy"] .skin-dock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: min(100%, 520px);
+  margin: 20px auto 0;
+  padding: 7px 10px;
+  border: 1px solid var(--radio-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--radio-surface) 88%, transparent);
+  color: var(--radio-ink);
+}
+
+.radio-root .skin-dock button {
+  display: grid;
+  place-items: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+}
+
+.radio-root .skin-dock .dock-play {
+  border: 1px solid var(--radio-accent);
+  background: color-mix(in srgb, var(--radio-accent) 20%, transparent);
+}
+
+.radio-root .skin-dock .dock-volume {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 220px;
+  padding: 0 8px;
+}
+
+.radio-root .skin-dock .dock-volume input {
+  min-width: 0;
+  width: 100%;
+  accent-color: var(--radio-accent);
+}
+
+/* ------------------------------- compact fallback for the physical skins --- */
+
+.radio-root .skin-flat-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* The reference only reaches this shape when three.js fails
+   * (`.native-flat-screen { width: min(100%,460px); height: 240px }`); the
+   * viewport cap keeps it usable on a short phone screen. */
+  width: min(100%, 460px);
+  height: min(240px, 40svh);
+  margin: 18px auto 0;
+  overflow: hidden;
+  border: 6px solid #b9bdb0;
+  border-radius: 14px;
+  background: #17221e;
+  color: #d9e8ca;
+  --ink: #d9e8ca;
+  --selected-text: #17221e;
+  box-shadow: 0 12px 26px -14px #4a5044aa, inset 0 0 0 2px #0d1412;
+  font-size: 13px;
+}
+
+.radio-root .skin-flat-screen.fantasy-flat {
+  border-color: #6b5836;
+  background: #10171b;
+  color: #eee1c5;
+  --ink: #e1c593;
+  --selected-text: #161b1e;
+  box-shadow: 0 14px 32px -16px #000000cc, 0 0 0 2px #241c12, inset 0 0 0 2px #0b1013;
+}
+
+.radio-root .skin-flat-screen .device-screen {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+.radio-root .skin-flat-screen .screen-list > button[data-selected="true"] {
+  background: #b8caa5;
+  color: #17221e;
+}
+
+.radio-root .skin-flat-screen .device-search input {
+  background: #23372b;
+  border: 2px solid #79926e;
+}
+
+.radio-root .rams-readout,
+.radio-root .fantasy-readout {
+  position: absolute;
+  left: 65.2%;
+  top: 14%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 29%;
+  height: 16.2%;
+  padding: 0 4px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #0d1412;
+  color: #d9e8ca;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px #2b3a33, inset 0 2px 8px #000000cc, 0 0 0 2px #c3c6ba;
+  transform: translateZ(14px);
+}
+
+.radio-root .rams-readout > span,
+.radio-root .fantasy-readout > span {
+  font-size: 6px;
+  letter-spacing: 0.18em;
+  opacity: 0.72;
+}
+
+.radio-root .rams-readout > strong {
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.radio-root .fantasy-readout {
+  left: calc(49.5% - 15.6%);
+  top: 42.8%;
+  width: 31.2%;
+  height: 20.7%;
+  background: #0c1114;
+  color: #eee1c5;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px #3b3a2c, inset 0 2px 10px #000000cc, 0 0 0 2px #6b5836;
+}
+
+.radio-root .fantasy-readout > strong {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------- shared shell --- */
+
+.radio-root .skin-body {
+  position: relative;
+  min-width: 0;
+}
+
+.radio-root .skin-faceplate {
+  position: relative;
+}
+
+/*
+ * `.skin-controls` is a plain flow container in the four flat skins (it wraps
+ * the transport or the click wheel). Only the two CSS-3D skins overlay their
+ * controls on the faceplate, so the absolute positioning is scoped to them.
+ */
+.radio-root .rams-controls,
+.radio-root .fantasy-controls {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* ---------------------------------------------------- Braun radio (rams) --- */
+
+.radio-root[data-theme="rams"] .skin-rams {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  color: #4c5244;
+}
+
+.radio-root .rams-scene {
+  position: relative;
+  width: 100%;
+  padding: 14px 0 34px;
+  perspective: 1500px;
+  perspective-origin: 50% 42%;
+  touch-action: none;
+}
+
+.radio-root .rams-faceplate {
+  width: 100%;
+  aspect-ratio: 1.9 / 1;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--view-x, -13deg)) rotateY(var(--view-y, -6deg));
+  transition: transform 240ms ease-out;
+  border-radius: 2.8% / 5.4%;
+  background: linear-gradient(150deg, #f7f8f2 0%, #eaebe3 34%, #dcded4 64%, #c9ccc1 100%);
+  box-shadow:
+    0 1px 0 #ffffffd4 inset,
+    0 -3px 5px #a5a89b66 inset,
+    0 3px 0 #b2b5ab,
+    0 28px 42px -24px #4f55485c,
+    0 62px 92px -42px #5c65554d;
+}
+
+.radio-root .rams-shell {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform: translateZ(-48px);
+  background: linear-gradient(180deg, #d6d8ce, #a3a79c);
+  box-shadow: 0 14px 22px #3f44385c;
+}
+
+.radio-root .rams-faceplate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, #ffffff8c 0%, transparent 12%, transparent 82%, #8d92842e 100%);
+}
+
+.radio-root .rams-speaker {
+  position: absolute;
+  left: 1.6%;
+  top: 3%;
+  width: 56.4%;
+  height: 94%;
+  overflow: hidden;
+  border-radius: 5% / 10%;
+  transform: translateZ(6px);
+  background: linear-gradient(155deg, #c9ccc1, #b5b9ad 68%, #a7ab9f);
+  box-shadow:
+    inset 0 0 0 1px #b0b4a7,
+    inset 5px 7px 12px #ffffff5c,
+    inset -7px -9px 14px #8f94854d,
+    inset 0 16px 28px #7e837440;
+}
+
+.radio-root .rams-grille {
+  position: absolute;
+  inset: 3.5%;
+  border-radius: 4% / 8%;
+  background-image: radial-gradient(circle at 50% 50%, #5f6357 0 0.9px, #0000 1.7px);
+  background-size: 7px 7px;
+  background-position: 3px 3px;
+  opacity: 0.5;
+}
+
+.radio-root .rams-cone {
+  position: absolute;
+  width: 58%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 34%, #9aa08f, #5f6456 52%, #33372c 100%);
+}
+
+.radio-root .rams-cone[data-speaker="0"] {
+  left: 5%;
+  top: 9%;
+  opacity: calc(0.1 + var(--speaker-opacity-0, 0) * 0.9);
+  transform: scale(var(--speaker-scale-0, 1)) translate(var(--speaker-travel-0, 0px), 0);
+}
+
+.radio-root .rams-cone[data-speaker="1"] {
+  left: 38%;
+  top: 40%;
+  opacity: calc(0.1 + var(--speaker-opacity-1, 0) * 0.9);
+  transform: scale(var(--speaker-scale-1, 1)) translate(var(--speaker-travel-1, 0px), 0);
+}
+
+.radio-root .rams-glass {
+  position: absolute;
+  left: 65.2%;
+  top: 14%;
+  width: 29%;
+  height: 16.2%;
+  overflow: hidden;
+  transform: translateZ(15px);
+  border-radius: 4px;
+  background: #0b1110;
+  box-shadow:
+    inset 0 0 0 1px #2b3a33,
+    inset 0 2px 12px #000000d9,
+    0 0 0 3px #c3c6ba,
+    0 0 0 4px #a9ada2,
+    0 7px 16px -7px #3f4438aa;
+}
+
+.radio-root .rams-knob {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #4c5244;
+  background: radial-gradient(circle at 36% 28%, #ffffff, #dadcd3 34%, #b1b5aa 72%, #8f9488 100%);
+  box-shadow:
+    0 0 0 1px #9aa08f,
+    0 9px 12px -7px #41473a99,
+    inset 0 -4px 7px #8c91844d,
+    inset 0 3px 6px #ffffffcc;
+  transform: translate(-50%, -50%) translateZ(calc(var(--knob-z, 16px) - var(--press, 0px)));
+  transition: transform 90ms ease-out;
+}
+
+.radio-root .rams-knob-tune {
+  left: 80.1%;
+  top: 46.99%;
+  width: 19.3%;
+  aspect-ratio: 1;
+  --press: var(--press-tune, 0px);
+  --knob-z: 20px;
+  transform: translate(-50%, -50%) rotate(var(--knob-rotation, 0rad)) translateZ(calc(var(--knob-z) - var(--press, 0px)));
+}
+
+.radio-root .rams-knob-tune::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 1px);
+  top: 7%;
+  width: 2px;
+  height: 21%;
+  border-radius: 1px;
+  background: #6c7263;
+}
+
+.radio-root .rams-knob-volume {
+  left: 72.2%;
+  top: 79.08%;
+  width: 6.8%;
+  aspect-ratio: 1;
+  --press: var(--press-volume, 0px);
+  --knob-z: 14px;
+  color: #cfd4c6;
+  background: radial-gradient(circle at 36% 30%, #6d7263, #3a3f34 60%, #23281f 100%);
+  box-shadow:
+    0 0 0 1px #22261d,
+    0 6px 9px -5px #2c3126cc,
+    inset 0 2px 4px #ffffff33;
+  transform: translate(-50%, -50%) rotate(var(--knob-rotation, 0rad)) translateZ(calc(var(--knob-z) - var(--press, 0px)));
+}
+
+.radio-root .rams-knob-volume::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 1px);
+  top: 8%;
+  width: 2px;
+  height: 34%;
+  border-radius: 1px;
+  background: #e7e9df;
+}
+
+.radio-root .rams-knob-power {
+  left: 88.5%;
+  top: 80%;
+  width: 4.3%;
+  aspect-ratio: 1;
+  --press: var(--press-power, 0px);
+  --knob-z: 14px;
+  color: #ffe6d5;
+  background: radial-gradient(circle at 36% 30%, #ff9b70, #d1562a 58%, #8d3418 100%);
+  box-shadow: 0 0 0 1px #7d2f16, 0 6px 9px -5px #4a1b0caa, inset 0 2px 4px #ffffff4d;
+}
+
+.radio-root .rams-knob-power::before {
+  content: "";
+  position: absolute;
+  inset: 24% 24% 18%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+}
+
+.radio-root .rams-knob-power::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 1px);
+  top: 16%;
+  width: 2px;
+  height: 34%;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+.radio-root .rams-scale {
+  position: absolute;
+  left: 72.2%;
+  top: 79.08%;
+  width: 15%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  color: #6d7364;
+  opacity: 0.75;
+}
+
+.radio-root .rams-scale i {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--angle, 0deg));
+}
+
+.radio-root .rams-scale i::before {
+  content: "";
+  position: absolute;
+  left: calc(50% - 0.5px);
+  top: 0;
+  width: 1px;
+  height: 5px;
+  background: currentColor;
+}
+
+.radio-root .rams-label {
+  position: absolute;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: #6f7566;
+}
+
+.radio-root .rams-label-tune {
+  left: 80.1%;
+  top: 21%;
+  translate: -50% 0;
+}
+
+.radio-root .rams-label-volume {
+  left: 72.2%;
+  top: 88%;
+  translate: -50% 0;
+}
+
+/* Exploded assembly view, driven by `controller.toggleExplode()`. */
+.radio-root .skin-rams.is-exploded .rams-faceplate {
+  transform: rotateX(-6deg) rotateY(10deg);
+}
+
+.radio-root .skin-rams.is-exploded .rams-shell {
+  transform: translateZ(-150px);
+}
+
+.radio-root .skin-rams.is-exploded .rams-speaker {
+  transform: translateZ(64px) translateX(-9%);
+}
+
+.radio-root .skin-rams.is-exploded .rams-glass {
+  transform: translateZ(120px);
+}
+
+.radio-root .skin-rams.is-exploded .rams-knob {
+  --knob-z: 190px;
+}
+
+/* The reference's projected screen metrics, kept verbatim inside the glass. */
+.radio-root .screen-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  display: flex;
+  flex-direction: column;
+}
+
+.radio-root .screen-inner.rams-glass-inner {
+  width: 900px;
+  height: 250px;
+  padding: 12px 24px;
+  transform: scale(var(--screen-scale, 0.32));
+  background: #17221e;
+  color: #d9e8ca;
+  --ink: #d9e8ca;
+  --selected-text: #17221e;
+  font: 34px/1.25 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.radio-root .rams-glass-inner .device-screen,
+.radio-root .fantasy-glass-inner .device-screen {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+.radio-root .rams-glass-inner .screen-title {
+  min-height: 44px;
+  padding: 0 8px;
+  border-color: #d9e8ca44;
+  font-size: 28px;
+  opacity: 0.88;
+}
+
+.radio-root .rams-glass-inner .screen-title button {
+  min-height: 44px;
+  font-size: inherit;
+}
+
+.radio-root .rams-glass-inner .screen-list {
+  padding: 2px 0;
+}
+
+.radio-root .rams-glass-inner .screen-list > button {
+  min-height: 58px;
+  padding: 0 12px;
+  border-radius: 3px;
+  font-size: 30px;
+}
+
+.radio-root .rams-glass-inner .screen-list > button[data-selected="true"] {
+  background: #b8caa5;
+  color: #17221e;
+}
+
+.radio-root .rams-glass-inner .device-empty {
+  margin: 16px 12px;
+  font-size: 28px;
+}
+
+.radio-root .rams-glass-inner .now-playing {
+  padding: 6px 8px 0;
+}
+
+.radio-root .rams-glass-inner .now-playing h1 {
+  margin-top: 6px;
+  font-size: 46px;
+  -webkit-line-clamp: 2;
+}
+
+.radio-root .rams-glass-inner .now-country {
+  font-size: 27px;
+}
+
+.radio-root .rams-glass-inner .now-tags {
+  margin: 6px 0 8px;
+  font-size: 25px;
+}
+
+.radio-root .rams-glass-inner .now-bottom {
+  font-size: 22px;
+}
+
+.radio-root .rams-glass-inner .signal-state i {
+  width: 8px;
+  height: 8px;
+}
+
+.radio-root .rams-glass-inner .device-search {
+  padding: 8px;
+  font-size: 26px;
+}
+
+.radio-root .rams-glass-inner .device-search input {
+  min-width: 0;
+  width: 100%;
+  height: 58px;
+  padding: 4px 12px;
+  border: 2px solid #79926e;
+  border-radius: 4px;
+  background: #23372b;
+  font-size: 28px;
+}
+
+.radio-root .rams-glass-inner .device-search > div button {
+  width: 58px;
+  height: 58px;
+}
+
+.radio-root .rams-glass-inner .source-choice {
+  min-height: 58px;
+  font-size: 28px;
+}
+
+.radio-root .rams-glass-inner .device-info {
+  padding: 8px;
+  font-size: 26px;
+}
+
+.radio-root .rams-glass-inner .device-info h2 {
+  font-size: 34px;
+}
+
+.radio-root .rams-glass-inner .device-info a {
+  min-height: 52px;
+  font-size: 26px;
+}
+
+.radio-root .rams-glass-inner .device-message {
+  font-size: 26px;
+}
+
+/* --------------------------------------------- fantasy console (fantasy) --- */
+
+.radio-root[data-theme="fantasy"] .skin-fantasy {
+  width: min(100%, 1040px);
+  margin: 0 auto;
+}
+
+.radio-root .fantasy-scene {
+  position: relative;
+  width: 100%;
+  padding: 16px 0 34px;
+  perspective: 1600px;
+  perspective-origin: 50% 44%;
+}
+
+.radio-root .fantasy-faceplate {
+  width: 100%;
+  aspect-ratio: 2.85 / 1.45;
+  transform-style: preserve-3d;
+  transform: rotateX(5deg);
+  border-radius: 4% / 8%;
+  background: radial-gradient(130% 150% at 16% 0%, #3d4854 0%, #242b34 44%, #141920 100%);
+  box-shadow:
+    0 0 0 1px #6d5a35,
+    0 0 0 3px #2b2016,
+    0 30px 60px -28px #000000cc,
+    0 0 90px -34px #2a89e955;
+}
+
+.radio-root .fantasy-shell {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform: translateZ(-44px);
+  background: linear-gradient(180deg, #2c333d, #0c0f13);
+  box-shadow: 0 16px 26px #00000080;
+}
+
+.radio-root .fantasy-glow {
+  position: absolute;
+  /* No negative horizontal inset: a blurred glow must not widen the page. */
+  inset: -9% 0;
+  border-radius: 8% / 16%;
+  transform: translateZ(-80px);
+  background:
+    radial-gradient(58% 68% at 18% 42%, #2a89e933, transparent 70%),
+    radial-gradient(58% 68% at 82% 42%, #ef6a2426, transparent 72%);
+  filter: blur(12px);
+}
+
+.radio-root .fantasy-speaker {
+  position: absolute;
+  top: 36.2%;
+  width: 17.2%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 2px solid #6b5836;
+  border-radius: 50%;
+  background: radial-gradient(circle at 42% 36%, #3a4249, #1b2026 62%, #0e1114);
+  box-shadow: inset 0 0 0 3px #241c12, inset 0 0 18px #000000cc, 0 0 24px -6px #e3a33d4d;
+  transform: translateZ(9px);
+}
+
+.radio-root .fantasy-speaker-left {
+  left: 7.7%;
+}
+
+.radio-root .fantasy-speaker-right {
+  left: 73.7%;
+}
+
+.radio-root .fantasy-cone {
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 34%, #5a636c, #262c33 60%, #12161a);
+}
+
+.radio-root .fantasy-speaker-left .fantasy-cone {
+  opacity: calc(0.25 + var(--speaker-opacity-0, 0) * 1.6);
+  transform: scale(var(--speaker-scale-0, 1)) translate(var(--speaker-travel-0, 0px), 0);
+}
+
+.radio-root .fantasy-speaker-right .fantasy-cone {
+  opacity: calc(0.25 + var(--speaker-opacity-1, 0) * 1.6);
+  transform: scale(var(--speaker-scale-1, 1)) translate(var(--speaker-travel-1, 0px), 0);
+}
+
+.radio-root .fantasy-cone-inner {
+  inset: 34%;
+  background: radial-gradient(circle at 40% 34%, #6d777f, #343b43 60%, #1a1f25);
+  opacity: 0.8;
+}
+
+.radio-root .fantasy-glass {
+  position: absolute;
+  left: 33.9%;
+  top: 42.8%;
+  width: 31.2%;
+  height: 20.7%;
+  overflow: hidden;
+  transform: translateZ(28px);
+  border-radius: 34px;
+  background: #0b0f12;
+  box-shadow:
+    0 0 0 3px #6b5836,
+    0 0 0 6px #241c12,
+    0 0 42px -8px #e3a33d66,
+    inset 0 0 0 1px #12181d;
+}
+
+.radio-root .screen-inner.fantasy-glass-inner {
+  width: 780px;
+  height: 268px;
+  padding: 4px 20px;
+  transform: scale(var(--screen-scale, 0.36));
+  background: #10171b;
+  color: #eee1c5;
+  --ink: #e1c593;
+  --selected-text: #161b1e;
+  font: 32px/1.5 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.radio-root .fantasy-glass-inner .screen-title {
+  min-height: 43px;
+  padding: 0 8px;
+  border-color: #bb995e45;
+  font-size: 28px;
+}
+
+.radio-root .fantasy-glass-inner .screen-title button {
+  min-height: 42px;
+  font-size: inherit;
+}
+
+.radio-root .fantasy-glass-inner .screen-list {
+  padding: 3px 0;
+}
+
+.radio-root .fantasy-glass-inner .screen-list > button {
+  min-height: 72px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 34px;
+}
+
+.radio-root .fantasy-glass-inner .screen-list > button[data-selected="true"] {
+  background: #e1c593;
+  color: #161b1e;
+}
+
+.radio-root .fantasy-glass-inner .device-empty {
+  margin: 14px 10px;
+  font-size: 28px;
+}
+
+.radio-root .fantasy-glass-inner .now-playing {
+  padding: 6px 10px 0;
+}
+
+.radio-root .fantasy-glass-inner .now-playing h1 {
+  font-size: 46px;
+  -webkit-line-clamp: 2;
+}
+
+.radio-root .fantasy-glass-inner .now-country {
+  font-size: 24px;
+}
+
+.radio-root .fantasy-glass-inner .now-tags {
+  font-size: 24px;
+}
+
+.radio-root .fantasy-glass-inner .now-bottom {
+  font-size: 22px;
+}
+
+.radio-root .fantasy-glass-inner .track-actions button,
+.radio-root .fantasy-glass-inner .device-volume {
+  font-size: 24px;
+}
+
+.radio-root .fantasy-glass-inner .device-volume {
+  flex-shrink: 0;
+  height: 40px;
+  min-height: 40px;
+  padding: 3px 8px;
+}
+
+.radio-root .fantasy-glass-inner .device-volume input {
+  height: 30px;
+  accent-color: #d4ae67;
+}
+
+.radio-root .fantasy-glass-inner .device-search {
+  padding: 8px;
+  font-size: 30px;
+}
+
+.radio-root .fantasy-glass-inner .device-search input {
+  min-width: 0;
+  width: 100%;
+  height: 58px;
+  padding: 4px 10px;
+  border: 2px solid #a8823f;
+  border-radius: 6px;
+  background: #1d1a12;
+  font-size: 32px;
+}
+
+.radio-root .fantasy-glass-inner .device-search > div button {
+  width: 54px;
+  height: 54px;
+}
+
+.radio-root .fantasy-glass-inner .source-choice {
+  min-height: 68px;
+  padding: 8px;
+  font-size: 30px;
+}
+
+.radio-root .fantasy-glass-inner .device-info {
+  padding: 8px;
+  font-size: 30px;
+}
+
+.radio-root .fantasy-glass-inner .device-info h2 {
+  font-size: 36px;
+}
+
+.radio-root .fantasy-glass-inner .device-info a {
+  min-height: 54px;
+  font-size: 28px;
+}
+
+.radio-root .fantasy-glass-inner .device-message {
+  font-size: 28px;
+}
+
+.radio-root .fantasy-glass-inner .support-panel h2 {
+  font-size: 34px;
+}
+
+.radio-root .fantasy-glass-inner .support-panel p {
+  font-size: 26px;
+}
+
+.radio-root .fantasy-glass-inner .signal-state i {
+  width: 8px;
+  height: 8px;
+}
+
+/* Five round controls at the reference's normalised positions. */
+.radio-root .fantasy-knob {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #1a1208;
+  background: radial-gradient(circle at 38% 30%, #ffe6a8, var(--knob-colour, #e3a33d) 46%, #8a5a1c 100%);
+  box-shadow:
+    0 0 0 2px #2a2014,
+    0 7px 12px -5px #000000cc,
+    inset 0 -3px 6px #6d4a1440,
+    inset 0 3px 6px #fff2c9aa;
+  transform: translate(-50%, -50%) rotate(var(--knob-rotation, 0rad))
+    translateZ(calc(var(--knob-z, 30px) - var(--press, 0px)));
+  transition: transform 90ms ease-out;
+}
+
+.radio-root .fantasy-knob-ring {
+  position: absolute;
+  inset: -12%;
+  border: 1px solid #d8b46a55;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.radio-root .fantasy-knob-previous {
+  left: 28.9%;
+  top: 73.8%;
+  width: 7.4%;
+  aspect-ratio: 1;
+  --press: var(--press-previous, 0px);
+}
+
+.radio-root .fantasy-knob-power {
+  left: 41.2%;
+  top: 73.8%;
+  width: 9.1%;
+  aspect-ratio: 1;
+  --press: var(--press-power, 0px);
+  --knob-colour: #6cc6f0;
+  --knob-z: 34px;
+}
+
+.radio-root .fantasy-knob-next {
+  left: 52.8%;
+  top: 73.8%;
+  width: 7.4%;
+  aspect-ratio: 1;
+  --press: var(--press-next, 0px);
+}
+
+.radio-root .fantasy-knob-favorite {
+  left: 62.5%;
+  top: 73.8%;
+  width: 6.7%;
+  aspect-ratio: 1;
+  --press: var(--press-favorite, 0px);
+  --knob-colour: #ff8fa2;
+}
+
+.radio-root .fantasy-knob-volume {
+  left: 74.7%;
+  top: 76.2%;
+  width: 8.8%;
+  aspect-ratio: 1;
+  --press: var(--press-volume, 0px);
+}
+
+.radio-root .fantasy-knob:focus-visible {
+  outline: 3px solid #f0c170;
+  outline-offset: 4px;
+}
+
+.radio-root .skin-fantasy.is-exploded .fantasy-faceplate {
+  transform: rotateX(14deg) translateZ(0);
+}
+
+.radio-root .skin-fantasy.is-exploded .fantasy-shell {
+  transform: translateZ(-160px);
+}
+
+.radio-root .skin-fantasy.is-exploded .fantasy-speaker {
+  transform: translateZ(70px) scale(1.06);
+}
+
+.radio-root .skin-fantasy.is-exploded .fantasy-glass {
+  transform: translateZ(130px);
+}
+
+.radio-root .skin-fantasy.is-exploded .fantasy-knob {
+  --knob-z: 190px;
+}
+
+/* ------------------------------------------------- dark theme override --- */
+
+.dsw-dark .radio-root,
+.dark .radio-root {
+  --radio-bg: #14161a;
+  --radio-surface: #1e2227;
+  --radio-ink: #e9ebec;
+  --radio-muted: #b4b9bd;
+  --radio-line: #383e46;
+  --radio-focus: #8fd3c8;
+  --radio-danger: #e2865e;
+  color-scheme: dark;
+}
+
+.dsw-dark .radio-root.listening-room,
+.dark .radio-root.listening-room {
+  background:
+    radial-gradient(ellipse at 0% 100%, #1c3a3c88, transparent 54%),
+    radial-gradient(ellipse at 100% 45%, #3a2c2888, transparent 52%),
+    #14161a;
+  color: #e9ebec;
+}
+
+.dsw-dark .radio-root .device-editorial,
+.dark .radio-root .device-editorial {
+  --ink: #2f5c52;
+  --selected-text: #f1f6f4;
+  background: #1e2227;
+  border-color: #383e46;
+  color: #e9ebec;
+  box-shadow: 0 3px 6px #00000059, 0 20px 50px -26px #000000b3;
+}
+
+.dsw-dark .radio-root .device-editorial .screen-title,
+.dark .radio-root .device-editorial .screen-title {
+  border-color: #ffffff26;
+}
+
+.dsw-dark .radio-root .device-editorial .window-title,
+.dsw-dark .radio-root .device-editorial .device-signature,
+.dark .radio-root .device-editorial .window-title,
+.dark .radio-root .device-editorial .device-signature {
+  color: #9aa1a6;
+}
+
+.dsw-dark .radio-root .device-editorial .now-country,
+.dsw-dark .radio-root .device-editorial .now-tags,
+.dark .radio-root .device-editorial .now-country,
+.dark .radio-root .device-editorial .now-tags {
+  color: #c3c9cd;
+}
+
+.dsw-dark .radio-root .device-pocket,
+.dark .radio-root .device-pocket {
+  background: linear-gradient(120deg, #2a2e30 8%, #212527 56%, #191c1e);
+  border-color: #3a4044;
+  color: #dbe6c6;
+  box-shadow: inset 2px 3px 3px #ffffff14, inset -5px -7px 10px #0000004d, 0 25px 40px -22px #000000cc;
+}
+
+.dsw-dark .radio-root .device-pocket .device-screen,
+.dark .radio-root .device-pocket .device-screen {
+  border-color: #5b6552;
+  background: #2b3527;
+  color: #dbe6c6;
+  box-shadow: inset 3px 4px 8px #10160c80, 0 0 0 2px #1b1f18;
+}
+
+.dsw-dark .radio-root .device-pocket .screen-title,
+.dark .radio-root .device-pocket .screen-title {
+  border-color: #8d9880;
+}
+
+.dsw-dark .radio-root .ipod-wheel,
+.dark .radio-root .ipod-wheel {
+  background: linear-gradient(135deg, #2b3033, #232729);
+  border-color: #3d4347;
+}
+
+.dsw-dark .radio-root .ipod-wheel .wheel-center,
+.dark .radio-root .ipod-wheel .wheel-center {
+  background: linear-gradient(135deg, #3b4247, #2c3236);
+  border-color: #4a5155;
+}
+
+.dsw-dark .radio-root .device-engraving,
+.dark .radio-root .device-engraving {
+  color: #9ba49a;
+}
+
+.dsw-dark .radio-root .theme-popover,
+.dark .radio-root .theme-popover {
+  border-color: #3d434a;
+  background: #22272c;
+  color: #e6e9ea;
+  box-shadow: 0 14px 44px #00000073;
+}
+
+.dsw-dark .radio-root .theme-popover button[aria-checked="true"],
+.dark .radio-root .theme-popover button[aria-checked="true"] {
+  background: #333a41;
+}
+
+.dsw-dark .radio-root .theme-trigger,
+.dark .radio-root .theme-trigger {
+  border-color: #ffffff26;
+  background: #ffffff14;
+  color: #dfe3e5;
+}
+
+.dsw-dark .radio-root .theme-picker,
+.dark .radio-root .theme-picker {
+  color: #9aa1a6;
+}
+
+.dsw-dark .radio-root .skin-flat-screen,
+.dark .radio-root .skin-flat-screen {
+  border-color: #4a5048;
+  box-shadow: 0 14px 30px -16px #000000cc, inset 0 0 0 2px #0a0e0c;
+}
+
+.dsw-dark .radio-root .device-pocket .device-signature,
+.dark .radio-root .device-pocket .device-signature {
+  color: #a4ad97;
+}
+
+/* ------------------------------------------- compact + presentation chrome --- */
+
+.radio-root[data-compact="true"] .radio-stage {
+  padding: 58px 12px 26px;
+}
+
+.radio-root[data-compact="true"] .radio-notice {
+  width: min(100% - 24px, 640px);
+}
+
+.radio-root[data-compact="true"] .rams-scene,
+.radio-root[data-compact="true"] .fantasy-scene {
+  padding-top: 6px;
+}
+
+.radio-root[data-compact="true"] .skin-dock {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.radio-root[data-compact="true"] .theme-picker {
+  top: 14px;
+  right: 14px;
+}
+
+.radio-root.listening-room[data-presentation] {
+  min-height: 0;
+}
+
+.radio-root.listening-room[data-presentation="page"] {
+  min-height: 100svh;
+}
+
+.radio-root.listening-room[data-compact="true"][data-presentation="page"] {
+  min-height: 0;
+}
+
+/* --------------------------------------------------------------- focus --- */
+
+.radio-root.listening-room :is(button, input, a, [tabindex]):focus-visible {
+  outline: 2px solid var(--radio-focus);
+  outline-offset: 3px;
+}
+
+/* Inside the projected glass an outer ring would be scaled away. */
+.radio-root .rams-glass-inner :is(button, a, input, [tabindex]):focus-visible,
+.radio-root .fantasy-glass-inner :is(button, a, input, [tabindex]):focus-visible {
+  outline: 4px solid currentColor;
+  outline-offset: -4px;
+}
+
+/* -------------------------------------------------------- reduced motion --- */
+
+/*
+ * Two declarations, no `!important`: every animated selector in
+ * 20-reference.css is enumerated here and wins on source order.
+ */
+.radio-root[data-motion="off"] *,
+.radio-root[data-motion="off"] *::before,
+.radio-root[data-motion="off"] *::after {
+  transition-duration: 0s;
+}
+
+.radio-root[data-motion="off"] .spinner,
+.radio-root[data-motion="off"] .spectrum i,
+.radio-root[data-motion="off"] .classic-spectrum i,
+.radio-root[data-motion="off"] .rams-faceplate,
+.radio-root[data-motion="off"] .rams-knob,
+.radio-root[data-motion="off"] .fantasy-knob,
+.radio-root[data-motion="off"] .rams-cone,
+.radio-root[data-motion="off"] .fantasy-cone,
+.radio-root[data-motion="off"] .theme-picker {
+  animation: none;
+  transition: none;
+}
+
+/* ------------------------------------- fantasy 3D / three.js scene --- */
+
+/*
+ * `fantasy` 的 three.js 场景外壳。正常路径下画布由 `three/fantasyScene.ts`
+ * 创建；WebGL 不可用时 `FantasySkin` 渲染 `FantasyFallback`（上面的 CSS 3D 版本），
+ * 所以这一节只管画布容器、加载态与机内面板。
+ */
+
+.radio-root[data-theme="fantasy"] .skin-fantasy-3d {
+  position: relative;
+  /* 几何与参考的 `.rams-experience` / `.fantasy-experience .rams-view` 对齐。 */
+  width: min(100%, 1100px);
+  height: min(76svh, 700px);
+  min-height: 430px;
+  margin: 0 auto;
+  /*
+   * 必须完全透明，且**不加圆角、不裁切**。
+   *
+   * 房间底色已经由 `.radio-root.room-fantasy` 提供（与参考 `.room-fantasy` 逐字节
+   * 相同的三段渐变 + #121317）。这里若再叠一份渐变并配 `border-radius`+`overflow:hidden`，
+   * 就会在收音机背后显出一块圆角"衬板"，同条件 A/B 里被读图判读直接指为"背景脏、两层皮"；
+   * 而且它会抬高机器下方的局部亮度，把 30% 不透明度的落地阴影吃掉。
+   */
+  background: none;
+  border-radius: 0;
+  color: #d9c29a;
+}
+
+.radio-root .fantasy-view {
+  position: absolute;
+  inset: 0;
+}
+
+.radio-root .fantasy-view canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  touch-action: none;
+}
+
+.radio-root .fantasy-view canvas:focus-visible {
+  outline: 1px solid #c49c58;
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* 指针停在实体按键上时的可点提示（引擎切换的类名）。 */
+.radio-root .fantasy-view canvas.native-canvas-action {
+  cursor: pointer;
+}
+
+.radio-root .fantasy-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  align-content: center;
+  font: 500 14px/1.5 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  letter-spacing: 0.08em;
+  color: rgba(243, 232, 206, 0.82);
+}
+
+/* 参考实现的加载符文：`.model-loader-fantasy` 的 156px + `loader-rune` 呼吸动画。 */
+.radio-root .fantasy-loading img {
+  width: 156px;
+  height: 156px;
+  object-fit: contain;
+  animation: radio-rune 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes radio-rune { 0%,100% { rotate: -3deg; scale: 0.96; } 50% { rotate: 3deg; scale: 1; } }
+
+.radio-root .fantasy-panel {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: min(78%, 520px);
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid rgba(226, 188, 122, 0.28);
+  border-radius: 14px;
+  background: rgba(16, 20, 22, 0.92);
+  box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.radio-root .fantasy-panel-close {
+  align-self: flex-end;
+  padding: 4px 10px;
+  border: 1px solid rgba(226, 188, 122, 0.32);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(243, 232, 206, 0.9);
+  font: 500 12px/1.4 inherit;
+  cursor: pointer;
+}
+
+.radio-root .fantasy-panel-close:focus-visible {
+  outline: 2px solid var(--radio-focus, #e3a33d);
+  outline-offset: 2px;
+}
+
+/* 供读屏交互反馈；视觉上不可见，但保留在可访问性树里。 */
+.radio-root .native-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.radio-root[data-compact="true"] .skin-fantasy-3d {
+  height: min(58svh, 460px);
+  min-height: 320px;
+}
+
+.radio-root[data-compact="true"] .fantasy-loading img {
+  width: 104px;
+  height: 104px;
+}
+
+.radio-root .skin-fantasy-3d canvas {
+  /* 3D 场景自带光照，不要跟随外壳的浅色/深色反转。 */
+  color-scheme: dark;
+}
+
+/* --------------------------------------- rams 3D / three.js scene --- */
+
+/*
+ * `rams` 的 three.js 程序化机身外壳。房间底色由 `.radio-root.room-rams`
+ * 提供（与参考 `.room-rams` 相同的 `radial-gradient(...#f6f4ec,#e3e2d8 75%)`），
+ * 所以这里同样**不设底色、不加圆角**，否则会在机身背后显出一块卡片。
+ */
+
+.radio-root[data-theme="rams"] .skin-rams-3d {
+  position: relative;
+  width: min(100%, 1280px);
+  min-width: 0;
+  margin: 0 auto;
+  background: none;
+}
+
+.radio-root .native-stage {
+  position: relative;
+  height: min(78svh, 740px);
+  min-height: 430px;
+  touch-action: none;
+}
+
+.radio-root .native-stage > canvas {
+  display: block;
+  cursor: grab;
+}
+
+.radio-root .native-stage > canvas.native-canvas-dragging {
+  cursor: grabbing;
+}
+
+.radio-root .native-stage > canvas.native-canvas-action {
+  cursor: pointer;
+}
+
+.radio-root .native-stage > canvas:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.radio-root .native-stage > canvas:focus-visible {
+  outline: 1px solid #87947b;
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* CSS3D 层本身不吃指针事件，只有投影进去的屏幕面板吃。 */
+.radio-root .native-css-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.radio-root .native-screen-hidden {
+  visibility: hidden;
+}
+
+.radio-root .native-glass {
+  width: 900px;
+  height: 250px;
+  overflow: hidden;
+  background: #17221e;
+  color: #d9e8ca;
+  pointer-events: auto;
+  font: 34px/1.25 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.radio-root .native-now {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+  height: 100%;
+  padding: 12px 24px;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.radio-root .native-now:focus-visible {
+  outline: 3px solid #d9e8ca;
+  outline-offset: -3px;
+}
+
+.radio-root .native-now > span {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 29px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.8;
+}
+
+.radio-root .native-now strong {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1.2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.radio-root .native-now small {
+  margin-top: auto;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 25px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.radio-root .native-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  translate: -50% -50%;
+  border: 2px solid #aeb5a7;
+  border-top-color: #c96f43;
+  border-radius: 50%;
+  animation: radio-loader-spin 1s linear infinite;
+}
+
+@keyframes radio-loader-spin { to { rotate: 360deg; } }
+
+.radio-root .native-panel {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: min(78%, 520px);
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid var(--radio-line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--radio-surface) 94%, transparent);
+  box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.radio-root .native-panel-head {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.radio-root .native-panel-action {
+  padding: 4px 12px;
+  border: 1px solid var(--radio-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--radio-ink);
+  font: 500 12px/1.4 inherit;
+  cursor: pointer;
+}
+
+.radio-root .native-panel-action[aria-pressed="true"] {
+  border-color: var(--radio-accent);
+  color: var(--radio-accent);
+}
+
+.radio-root .native-panel-action:focus-visible {
+  outline: 2px solid var(--radio-focus);
+  outline-offset: 2px;
+}
+
+.radio-root[data-compact="true"] .native-stage {
+  height: min(62svh, 520px);
+  min-height: 320px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radio-root *,
+  .radio-root *::before,
+  .radio-root *::after {
+    transition-duration: 0s;
+  }
+
+  .radio-root .spinner,
+  .radio-root .spectrum i,
+  .radio-root .classic-spectrum i,
+  .radio-root .rams-faceplate,
+  .radio-root .rams-knob,
+  .radio-root .fantasy-knob,
+  .radio-root .rams-cone,
+  .radio-root .fantasy-cone,
+  .radio-root .fantasy-loading img,
+  .radio-root .native-loading,
+  .radio-root .theme-picker {
+    animation: none;
+    transition: none;
+  }
+}

@@ -1,0 +1,179 @@
+/*
+ * 乔木电台 · DSH 插件 — 10-base.css
+ * Shell, colour tokens, stage and notice. Load order: 10-base → 20-reference → 30-skins.
+ *
+ * Everything is scoped to `.radio-root`; there are no global selectors. The
+ * light/dark token pairs below are the only colour decisions the shell makes —
+ * each environment keeps its own reference palette inside 20-reference.css.
+ *
+ * Deliberate decision: the radio is a fixed-palette player surface. It follows
+ * the DSH shell (`.dsw-dark` / `.dark` ancestors) but *not* the operating
+ * system's `prefers-color-scheme`, so `.radio-root` pins `color-scheme: light`
+ * and an explicit foreground colour. Without that pin a dark system appearance
+ * makes the UA inherit white text onto the fixed light skins (measured 1.09:1
+ * contrast on the editorial device). The four dark environments (deck,
+ * console, fantasy) re-declare `color-scheme: dark` on their own
+ * `[data-theme]` block, which wins on specificity.
+ */
+
+.radio-mount {
+  display: block;
+  min-width: 0;
+}
+
+.radio-root {
+  /* Tokens every environment inherits; each theme overrides what it needs. */
+  --radio-bg: #e8e8e3;
+  --radio-surface: #f7f5ee;
+  --radio-ink: #3f4239;
+  --radio-muted: #5c6157;
+  --radio-line: #c9ccc4;
+  --radio-accent: #b8562f;
+  --radio-focus: #2f6f69;
+  --radio-danger: #b53a38;
+  --radio-selected-ink: #ffffff;
+
+  /* Fixed palette: never inherit the UA's dark-appearance initial colours. */
+  color: var(--radio-ink, #2b2f28);
+  color-scheme: light;
+
+  position: relative;
+  min-width: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+.radio-root[data-theme="editorial"] {
+  --radio-bg: #eeeae2;
+  --radio-surface: #f8f7f1;
+  --radio-ink: #3f4239;
+  --radio-muted: #5c6157;
+  --radio-line: #cfcec4;
+  --radio-accent: #b8562f;
+  --radio-focus: #3d6355;
+  --radio-danger: #b53a38;
+}
+
+.radio-root[data-theme="pocket"] {
+  --radio-bg: #e4e8dd;
+  --radio-surface: #f4f7f0;
+  --radio-ink: #39442c;
+  --radio-muted: #59654e;
+  --radio-line: #c1c8b6;
+  --radio-accent: #55703f;
+  --radio-focus: #4a5a3c;
+  --radio-danger: #a8452f;
+}
+
+.radio-root[data-theme="deck"] {
+  --radio-bg: #232630;
+  --radio-surface: #343a49;
+  --radio-ink: #dde2ea;
+  --radio-muted: #aeb6c2;
+  --radio-line: #556074;
+  --radio-accent: #a8c94a;
+  --radio-focus: #c8ef55;
+  color-scheme: dark;
+  --radio-danger: #e2865e;
+}
+
+.radio-root[data-theme="console"] {
+  --radio-bg: #373b3e;
+  --radio-surface: #2b3135;
+  --radio-ink: #e2e7ea;
+  --radio-muted: #b6bdc1;
+  --radio-line: #535a5d;
+  --radio-accent: #8fbcd0;
+  --radio-focus: #a8cfdf;
+  color-scheme: dark;
+  --radio-danger: #e0836a;
+}
+
+.radio-root[data-theme="rams"] {
+  --radio-bg: #e3e2d8;
+  --radio-surface: #efeee6;
+  --radio-ink: #3f463a;
+  --radio-muted: #5d6355;
+  --radio-line: #c6c6b8;
+  --radio-accent: #a9531f;
+  --radio-focus: #6d7c5c;
+  --radio-danger: #b34a2e;
+}
+
+.radio-root[data-theme="fantasy"] {
+  --radio-bg: #121317;
+  --radio-surface: #1b1f26;
+  --radio-ink: #ece0c6;
+  --radio-muted: #c3b295;
+  --radio-line: #4a3c28;
+  --radio-accent: #e0a63f;
+  --radio-focus: #f0c170;
+  color-scheme: dark;
+  --radio-danger: #e0a05a;
+}
+
+/* ------------------------------------------------------------------ stage --- */
+
+.radio-root .radio-stage {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  min-width: 0;
+  /* Top padding clears the absolutely positioned theme picker; the matching
+   * bottom figure keeps the device optically centred in a page presentation. */
+  padding: 66px 20px 66px;
+}
+
+/* ----------------------------------------------------------------- notice --- */
+
+.radio-root .radio-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(100% - 40px, 640px);
+  margin: 0 auto 20px;
+  padding: 9px 14px;
+  border: 1px solid var(--radio-line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--radio-surface) 92%, transparent);
+  color: var(--radio-ink);
+  font-size: 12px;
+  line-height: 1.55;
+  flex-shrink: 0;
+}
+
+.radio-root .radio-notice > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.radio-root .radio-notice > button {
+  flex-shrink: 0;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--radio-line);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+}
+
+.radio-root .radio-notice.has-error {
+  border-color: color-mix(in srgb, var(--radio-danger, #b53a38) 55%, var(--radio-line));
+}
+
+/* ---------------------------------------------------------- a11y utility --- */
+
+.radio-root .radio-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

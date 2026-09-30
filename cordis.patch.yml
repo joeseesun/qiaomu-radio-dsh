@@ -1,0 +1,7 @@
+# 乔木电台 · 宿主插件行（bundle patch，由 profile 的 dsh.profile.bundles 自动应用）
+#
+# 插件在 dsh.profile.bundles 里列出本包名后即被插入加载器；挂载点见
+# src/dsh/routes.ts 的 ROUTE_PREFIX（/qiaomu-radio）。
+- insert:
+    - id: qiaomu-radio
+      name: '@qiaomu/dsh-radio'
