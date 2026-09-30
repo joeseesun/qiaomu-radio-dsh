@@ -121,9 +121,7 @@ async function emitTypes() {
     "--declaration",
     "--noEmit",
     "false",
-  ]).catch((error) => {
-    console.warn("declaration emit skipped:", error.message.split("\n")[0]);
-  });
+  ]);
 }
 
 async function main() {

@@ -1,7 +1,6 @@
 {
   "name": "@qiaomu/dsh-radio",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.1",
   "description": "乔木电台 · DSH 插件：在 DeepSeek Harness 里收听全球直播电台，五种播放器环境、场景频道、本地口味记忆。",
   "type": "module",
   "license": "GPL-3.0-or-later",
@@ -10,11 +9,10 @@
   "main": "lib/index.js",
   "exports": {
     ".": {
-      "types": "./lib/types/index.d.ts",
+      "types": "./lib/types/dsh/index.d.ts",
       "default": "./lib/index.js"
     },
     "./client": {
-      "types": "./lib/types/client/index.d.ts",
       "default": "./lib/client.js"
     },
     "./package.json": "./package.json"
@@ -27,7 +25,10 @@
     "cordis.patch.yml",
     "dsh-plugin.json",
     "README.md",
-    "docs/INSTALL.md"
+    "docs/INSTALL.md",
+    "LICENSE",
+    "screenshots.json",
+    "docs/screenshots/**"
   ],
   "dsh": {
     "bundle": {
@@ -49,7 +50,8 @@
     "build:preview": "node scripts/build-preview.mjs",
     "preview": "node scripts/build-preview.mjs && node preview-dist/server.mjs",
     "preview:serve": "node preview-dist/server.mjs",
-    "check": "npm run typecheck && npm run test && npm run build"
+    "check": "npm run typecheck && npm run test && npm run build && node scripts/verify-package.mjs",
+    "prepack": "npm run build && node scripts/verify-package.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
@@ -70,5 +72,24 @@
   },
   "dependencies": {
     "three": "^0.186.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joeseesun/qiaomu-radio-dsh.git"
+  },
+  "bugs": {
+    "url": "https://github.com/joeseesun/qiaomu-radio-dsh/issues"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "radio",
+    "music"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
