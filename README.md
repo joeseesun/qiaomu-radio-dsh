@@ -164,5 +164,4 @@ See [installation details](docs/INSTALL.md).
 
 The desktop sidebar and Braun 3D player rendering were verified on September 30,
 2026. Audio playback was not retested during that display repair. Station availability
-depends on upstream services. This repository is currently private; no public release
-or npm publication is implied. Code is licensed under GPL-3.0-or-later (see LICENSE).
+depends on upstream services. This repository is open source. An npm package has not been published. Code is licensed under GPL-3.0-or-later (see LICENSE).
