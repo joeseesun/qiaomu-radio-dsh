@@ -14,7 +14,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { h } from "../ui";
 import { RamsFallback } from "./RamsFallback";
-import { renderScreen, renderTransport, useScreen } from "./shared";
+import { PhysicalMenu } from "./PhysicalMenu";
 import { mountRamsScene, type RamsSceneHandle, type RamsScreen } from "./three/ramsScene";
 import type { SkinProps } from "./types";
 
@@ -34,10 +34,11 @@ export function RamsSkin(props: SkinProps): ReactNode {
   const [supported] = useState(hasWebGL);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [panel, setPanel] = useState(false);
+  const panel = controller.page !== "now";
+  const [menuElement] = useState(() => document.createElement("div"));
   const [exploded, setExploded] = useState(false);
   const [announcement, setAnnouncement] = useState("");
-  const runtime = useScreen(controller);
+
 
   const live = useRef({ controller, reducedMotion: props.reducedMotion });
   live.current = { controller, reducedMotion: props.reducedMotion };
@@ -78,6 +79,7 @@ export function RamsSkin(props: SkinProps): ReactNode {
     if (!element) return;
     const handle = mountRamsScene(element, {
       labels,
+      menuElement,
       actions: {
         onToggle: () => live.current.controller.toggle(),
         // 参考的调台旋钮走的是 `p.stations` 列表；这里走控制器的 next/previous，
@@ -86,11 +88,11 @@ export function RamsSkin(props: SkinProps): ReactNode {
         onTune: (delta) => (delta > 0 ? live.current.controller.next() : live.current.controller.previous()),
         onVolume: (value) => live.current.controller.setVolume(value),
         onMuteToggle: () => live.current.controller.toggleMute(),
-        onScreenMenu: () => setPanel((open) => !open),
+        onScreenMenu: () => live.current.controller.openPage(live.current.controller.page === "now" ? "menu" : "now"),
       },
       announce: setAnnouncement,
       prefersReducedMotion: () => live.current.reducedMotion,
-      onReset: () => setExploded(false),
+      onReset: () => { setExploded(false); live.current.controller.openPage("now"); },
       onReady: () => setReady(true),
       onFail: () => setFailed(true),
     });
@@ -117,14 +119,14 @@ export function RamsSkin(props: SkinProps): ReactNode {
     });
   }, [ready, controller.isPlaying, controller.muted, controller.volume]);
 
-  // 拆解视图是参考的独立动作（不是翻页触发的），所以用面板里的按钮驱动。
+  // 拆解视图是参考的独立动作（不是翻页触发的），由机身旁的独立图标驱动。
   useEffect(() => {
     scene.current?.explode(exploded);
   }, [exploded, ready]);
 
   useEffect(() => {
-    if (controller.page === "now") setPanel(false);
-  }, [controller.page]);
+    scene.current?.menu(panel);
+  }, [panel, ready]);
 
   if (!supported || failed) return h(RamsFallback, props);
 
@@ -140,39 +142,13 @@ export function RamsSkin(props: SkinProps): ReactNode {
     !ready
       ? h("div", { className: "native-loading", role: "status", "data-rams-loading": "1" })
       : null,
-    panel
-      ? h(
-          "div",
-          { className: "native-panel", "data-rams-panel": "1" },
-          h(
-            "div",
-            { className: "native-panel-head" },
-            h(
-              "button",
-              {
-                type: "button",
-                className: "native-panel-action",
-                "data-rams-explode": "1",
-                "aria-pressed": exploded ? "true" : "false",
-                onClick: () => setExploded((value) => !value),
-              },
-              exploded ? controller.t("action.collapse") : controller.t("action.explode"),
-            ),
-            h(
-              "button",
-              {
-                type: "button",
-                className: "native-panel-action",
-                "aria-label": controller.t("action.back"),
-                onClick: () => setPanel(false),
-              },
-              controller.t("action.back"),
-            ),
-          ),
-          renderScreen(controller, runtime),
-          renderTransport(controller),
-        )
-      : null,
+    panel && ready ? h(PhysicalMenu, { controller, target: menuElement }) : null,
+    !panel ? h("button", {
+      type: "button", className: "physical-explode", "aria-label": controller.t(exploded ? "action.collapse" : "action.explode"),
+      title: controller.t(exploded ? "action.collapse" : "action.explode"), "aria-pressed": exploded,
+      onClick: () => setExploded(value => !value),
+    }, h("svg", { viewBox: "0 0 24 24", width: "1em", height: "1em", fill: "none", stroke: "currentColor", strokeWidth: 1.5, "aria-hidden": true },
+      h("path", { d: "m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5M3 16l9 5 9-5" }))) : null,
     h("span", { className: "native-sr", role: "status" }, announcement),
   );
 }
