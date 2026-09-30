@@ -45,6 +45,11 @@ for (const theme of ["rams", "fantasy"]) it(`${theme}: navigates inside the devi
   expect(container.querySelector('.physical-menu [data-page="menu"]')).toBeTruthy();
   expect(container.querySelector(".native-panel,.fantasy-panel")).toBeNull();
   expect(resolvePlay).not.toHaveBeenCalled();
+  const menuRows = container.querySelectorAll<HTMLButtonElement>('.physical-menu .screen-list > button');
+  await act(async () => { menuRows[1]!.focus(); });
+  await act(async () => { menuRows[1]!.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })); });
+  expect(document.activeElement).toBe(menuRows[2]);
+  expect(menuRows[2]!.getAttribute("data-selected")).toBe("true");
   await click("电台列表");
   const row = container.querySelector<HTMLButtonElement>('.physical-menu .screen-list > button')!;
   await act(async () => { row.click(); });
