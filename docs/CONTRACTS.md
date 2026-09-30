@@ -237,3 +237,6 @@ export function createRadioService(options?: RadioServiceOptions): RadioService;
 - 因此界面验证走 `npm run preview`（同一份 UI 源码 + 同一个宿主服务），
   装进 harness 后打开插件的路由地址即可得到同一界面。
 - 打包与部署由 Lead 负责，队友不要改 `scripts/**`。
+## 11. 魔兽皮肤启动校准
+
+启动时可为随包双面 GLB 建立临时空间索引以加速表面投射；必须保持原坐标、网格密度和交互区域，且用真实模型对照原射线结果。索引仅在静态校准阶段使用，不用于之后变形的模型。加载失败或超时须结束 loading 并释放场景。

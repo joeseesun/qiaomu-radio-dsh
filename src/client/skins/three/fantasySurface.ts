@@ -1,6 +1,6 @@
 // Ported from the reference implementation:
 //   <workspace>/qiaomu-radio/src/fantasySurface.ts
-// Kept line-for-line (algorithm, constants, geometry parameters) for visual fidelity.
+// Reference geometry constants are preserved; startup sampling can use a spatial index.
 
 import * as THREE from "three";
 import { roundedPanel } from "./radioGeometry";
@@ -60,12 +60,12 @@ export function surfacePoint(model: THREE.Object3D, x: number, y: number) {
     .intersectObject(model, true)[0]?.point;
 }
 
-export function surfacePatch(model: THREE.Object3D, x: number, y: number, width: number, height: number, segments = 16, radius = 0) {
+export function surfacePatch(model: THREE.Object3D, x: number, y: number, width: number, height: number, segments = 16, radius = 0, sample: (x: number, y: number) => THREE.Vector3 | undefined = (px: number, py: number) => surfacePoint(model, px, py)) {
   const geometry = radius ? new THREE.ShapeGeometry(roundedPanel(width,height,radius),segments) : new THREE.PlaneGeometry(width, height, segments, Math.max(4, Math.round(segments * height / width)));
   const position = geometry.attributes.position;
   for (let i = 0; i < position.count; i++) {
     const px = position.getX(i) + x, py = position.getY(i) + y;
-    const point = surfacePoint(model, px, py);
+    const point = sample(px, py);
     if (!point) { geometry.dispose(); throw new Error("Radio surface calibration missed the model"); }
     position.setXYZ(i, px, py, point.z + .0015);
     if(radius)geometry.attributes.uv.setXY(i,(px-x)/width+.5,(py-y)/height+.5);
