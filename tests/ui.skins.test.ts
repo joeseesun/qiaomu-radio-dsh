@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 /**
- * Six player environments, mounted in happy-dom.
+ * Four player environments, mounted in happy-dom.
  *
  * `docs/CONTRACTS.md` §7 asks for "six skins mount without throwing and the key
  * a11y attributes exist". Every host call goes through an injected fake, so the
@@ -146,9 +146,9 @@ function guardFetch(): ReturnType<typeof vi.fn> {
 
 /* -------------------------------------------------------------------- tests */
 
-describe("ui.skins — five environments mount", () => {
-  it("covers exactly the five contract themes", () => {
-    expect([...THEME_IDS].sort()).toEqual(["console", "deck", "fantasy", "pocket", "rams"]);
+describe("ui.skins — four environments mount", () => {
+  it("covers exactly the four contract themes", () => {
+    expect([...THEME_IDS].sort()).toEqual(["deck", "fantasy", "pocket", "rams"]);
   });
 
   for (const theme of THEME_IDS) {
@@ -207,7 +207,7 @@ describe("ui.skins — five environments mount", () => {
       }
       const screenIcons = [...screen!.querySelectorAll("svg")];
       for (const svg of screenIcons) expect(svg.getAttribute("width")).toMatch(/em$/);
-      // deck/console render the playlist itself as the `now` screen, so the
+      // deck renders the playlist itself as the `now` screen, so the
       // only icon-free contract screen is that documented playlist variant.
       if (screenIcons.length === 0) {
         expect(screen!.classList.contains("classic-playlist")).toBe(true);
@@ -236,18 +236,26 @@ describe("ui.skins — five environments mount", () => {
     expect(RADIO_THEMES.some(theme => String(theme.id) === "editorial")).toBe(false);
   });
 
+  it("migrates the removed Foobar2000 preference to Braun", async () => {
+    guardFetch();
+    const { root, host } = await mount("pocket", 1024, "console");
+    expect(root().dataset.theme).toBe("rams");
+    expect(host.savedThemes.at(-1)).toBe("rams");
+    expect(RADIO_THEMES.some(theme => String(theme.id) === "console")).toBe(false);
+  });
+
   it("falls back to the Braun radio when nothing is saved", async () => {
     guardFetch();
     const { root } = await mount("");
     expect(root().dataset.theme).toBe("rams");
   });
 
-  it("keeps the six supported languages and defaults to a supported one", async () => {
+  it("keeps the ten original languages and defaults to a supported one", async () => {
     localStorage.removeItem(LOCALE_KEY);
     guardFetch();
     const { root } = await mount("pocket");
     expect(LOCALES).toContain(root().getAttribute("lang"));
-    expect(LOCALES).toEqual(["zh-CN", "en", "es", "fr", "de", "ja"]);
+    expect(LOCALES).toEqual(["zh-CN", "en", "es", "fr", "de", "ja", "ko", "pt", "ru", "ar"]);
   });
 
   it("marks a narrow container as compact and keeps the screen interactive", async () => {

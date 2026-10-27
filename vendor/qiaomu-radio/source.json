@@ -1,0 +1,51 @@
+{
+  "commit": "450a6692c0dd3498a2ae7cfa6b579bb461fe60a6",
+  "version": "1.2.4",
+  "files": {
+    "plugin-src/home.ts": "3c1b3f9c4fc2b0fd44fdd423597ab95fd29ae937e113686ce22c3602b10d1566",
+    "plugin-src/qiaomu-home.ts": "ec02b60342bcd2a8d35e4e45e2338c799b10df54db3fd129aa28f686ada68acc",
+    "plugin-src/i18n.ts": "c448944bfdb9aef88a3e9a337ddc42ef0a18a85ce663de160f09d8bb28a4de9f",
+    "plugin-src/update-notes.ts": "a1ef4e55a6063918d6821226facebcdb72ac1b4037b080302417678a5df073b1",
+    "plugin-src/update-notes-i18n.ts": "55a5b69785dab291f051e45496658785168186a16c8cd9b5a3c502803a2c0169",
+    "plugin-src/catalog.ts": "e565076ce0545e13ba82317c81cb0ca3355ba312cfc9c2241d7ddf600bb5894b"
+  },
+  "patches": {
+    "plugin-src/home.ts": [
+      [
+        "import type QiaomuRadioPlugin from \"./main\";",
+        "import type QiaomuRadioPlugin from \"../client/home-owner\";"
+      ],
+      [
+        "import type { Station } from \"./types\";",
+        "import type { Station } from \"../core/types\";"
+      ]
+    ],
+    "plugin-src/qiaomu-home.ts": [
+      [
+        "import type { App, Plugin } from \"obsidian\";",
+        "type App = { workspace: { trigger(name: string, id: string): void } };\ntype Plugin = object;"
+      ]
+    ],
+    "plugin-src/update-notes.ts": [
+      [
+        "from 'obsidian'",
+        "from '../client/update-notes-ui'"
+      ]
+    ]
+  },
+  "updateNotesStylesSha256": "d2a63d15d9a5512cda4e3e4b0767f054d203356a5d46d86674e5d3b00071677b",
+  "fragments": {
+    "browseMethods": {
+      "upstream": "plugin-src/radio-view.ts",
+      "start": "  private renderBrowse(",
+      "end": "  private renderStation(",
+      "sha256": "35b1d6ce2068faba35d84912c62f3dc0b470ab5e2377ea70de15f7f60ff4036a"
+    },
+    "browseStyles": {
+      "upstream": "styles.css",
+      "start": ".qiaomu-radio__browse-layer {",
+      "end": "/* Obsidian's floating phone navbar",
+      "sha256": "d400c9766d0c03f75e4958b410f49b46ab68c70b28637a3e130be883795ee864"
+    }
+  }
+}

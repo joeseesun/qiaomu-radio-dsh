@@ -7,10 +7,10 @@
  */
 
 /** Scene channel used to seed a station search. */
-export type MoodId = "unwind" | "focus" | "jazz" | "classical" | "energy" | "world";
+export type MoodId = "recommend" | "unwind" | "focus" | "jazz" | "classical" | "energy" | "world";
 
 /** Player environment (skin) id. */
-export type ThemeId = "pocket" | "deck" | "console" | "rams" | "fantasy";
+export type ThemeId = "pocket" | "deck" | "rams" | "fantasy";
 
 /** Where a station list came from. */
 export type StationSource = "radio-browser" | "china-curated" | "regional" | "global-curated";
@@ -54,7 +54,9 @@ export type TasteProfile = {
 };
 
 /** A station list request. */
+export type DirectoryFilter = { tag?: string; country?: string; language?: string };
 export type CatalogRequest = {
+  filter?: DirectoryFilter;
   mood: MoodId;
   query?: string;
   source: StationSource;

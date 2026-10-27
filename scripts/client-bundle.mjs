@@ -16,7 +16,7 @@
  *     `module.exports`.
  *
  * Verified against the shipped bundles of `dsh-plugin-qiaomu-rss` and
- * `dsh-qiaomu-home`, which use exactly this shape.
+ * `qiaomu-home-dsh`, which use exactly this shape.
  *
  * Kept in its own module so the tests that lock these contracts build the
  * bundle exactly the way the release build does, instead of trusting a stale

@@ -238,6 +238,12 @@ describe("rememberStation", () => {
 });
 
 describe("normalizeProfile", () => {
+  it("rejects malformed history and nonnumeric weights without crashing ranking", () => {
+    const safe = normalizeProfile({ history: [null, { station: {} }, { station: station('good'), listenedAt: '2026-10-28' }], likedStationIds: [null, 'good', 'good'], tagWeights: { jazz: 2, broken: '3' }, stationReliability: { bad: { successes: 'none' } } });
+    expect(safe.history).toHaveLength(1); expect(safe.likedStationIds).toEqual(['good']);
+    expect(safe.tagWeights).toEqual({ jazz: 2 }); expect(safe.stationReliability).toEqual({});
+    expect(() => rankStations([station('good')], safe)).not.toThrow();
+  });
   it("returns an empty profile for missing or broken input", () => {
     expect(normalizeProfile(null)).toEqual(EMPTY_PROFILE);
     expect(normalizeProfile(undefined)).toEqual(EMPTY_PROFILE);

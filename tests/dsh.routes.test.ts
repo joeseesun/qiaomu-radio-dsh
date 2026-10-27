@@ -334,7 +334,7 @@ describe("player page", () => {
     expect(html).toContain('<meta name="color-scheme" content="light" />');
     expect(html).toContain("body.radio-page{margin:0");
     // The body sits behind the themed root, so it mirrors every theme value.
-    for (const theme of ["editorial", "rams", "pocket", "deck", "console", "fantasy"]) {
+    for (const theme of ["editorial", "rams", "pocket", "deck", "fantasy"]) {
       expect(html).toContain(`body.radio-page:has(main.radio-root[data-theme=${theme}])`);
     }
     expect(html).not.toContain("color-scheme: dark");

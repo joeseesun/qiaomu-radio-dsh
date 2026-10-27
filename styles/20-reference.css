@@ -57,7 +57,8 @@
 .radio-root .device-signature { font-size: 8px; text-align: center; letter-spacing: .26em; opacity: .55; }
 .radio-root .device-pocket { width: min(100%,420px); padding: 35px 34px 18px; border: 1px solid #c6c9c2; border-radius: 48px; background: linear-gradient(120deg,#fff 8%,#f8f9f6 56%,#e7eae5); box-shadow: inset 2px 3px 3px #fff,inset -5px -7px 10px #b4b9b655,0 25px 30px -12px #535f4e4d,0 50px 80px -30px #5c655540; }
 .radio-root .theme-picker { position: absolute; z-index: 20; top: 22px; right: 24px; color: #697066; }
-.radio-root .theme-trigger { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #79837125; border-radius: 50%; background: #ffffff45; color: inherit; }
+.radio-root .theme-trigger { width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: inherit; position: relative; isolation: isolate; }
+.radio-root .theme-trigger::before { content: ""; position: absolute; inset: 6px; z-index: -1; border: 1px solid #79837135; border-radius: 50%; background: #ffffff80; }
 .radio-root .theme-popover { position: absolute; top: 54px; right: 0; width: 180px; padding: 6px; border: 1px solid #c9ccc4; border-radius: 12px; background: #f7f8f2; color: #3d4538; box-shadow: 0 12px 40px #2f38282b; }
 .radio-root .theme-popover button { width: 100%; min-height: 44px; display: flex; align-items: center; gap: 12px; border: 0; border-radius: 7px; padding: 8px 12px; background: none; font-size: 13px; text-align: left; }
 .radio-root .theme-popover button[aria-checked="true"] { background: #e3e8dc; }
@@ -67,15 +68,15 @@
 .radio-root .dot-deck { background: #515b70; }
 .radio-root .dot-console { background: #b7bec4; }
 .radio-root .device-stage { padding-top: 66px; }
-.radio-root.room-deck .theme-trigger,
-.radio-root.room-console .theme-trigger { background: #ffffff0d; color: #d5dadf; border-color: #ffffff20; }
+.radio-root.room-deck .theme-trigger { color: #d5dadf; }
+.radio-root.room-deck .theme-trigger::before { background: #ffffff0d; border-color: #ffffff35; }
 .radio-root .device-engraving { font: 500 11px/1 -apple-system,sans-serif; color: #959d8c; letter-spacing: .06em; margin: -8px 0 20px 8px; }
 .radio-root .device-pocket .device-screen { height: 288px; border: 7px solid #8d9687; border-radius: 9px; color: #3e4931; background: #c9d4ad; box-shadow: inset 3px 4px 8px #49583b44,0 0 0 2px #c6cbbd; font-family: "Courier New", "PingFang SC", monospace; }
 .radio-root .device-pocket .screen-title { border-color: #77816b; }
 .radio-root .device-pocket .screen-title button { font-family: inherit; }
 .radio-root .device-pocket .device-volume input { height: 22px; }
 .radio-root .ipod-wheel { width: 230px; height: 230px; position: relative; margin: 32px auto 22px; border: 1px solid #d7dcd2; border-radius: 50%; background: linear-gradient(135deg,#e9ece5,#e2e6dd); box-shadow: inset 1px 2px 6px #a3ab9b2b,0 1px 1px #fff; }
-.radio-root .ipod-wheel button { position: absolute; display: flex; align-items: center; justify-content: center; padding: 0; min-width: 48px; min-height: 48px; border: 0; background: none; color: #909986; }
+.radio-root .ipod-wheel button { position: absolute; display: flex; align-items: center; justify-content: center; padding: 0; min-width: 48px; min-height: 48px; border: 0; background: none; color: #626d57; }
 .radio-root .ipod-wheel .wheel-menu { top: 3px; left: calc(50% - 40px); width: 80px; font-size: 14px; font-weight: 600; }
 .radio-root .wheel-left { left: 3px; top: calc(50% - 24px); }
 .radio-root .wheel-right { right: 3px; top: calc(50% - 24px); }
@@ -260,7 +261,8 @@
 .radio-root .rams-view canvas { display: block; }
 .radio-root .dot-rams { background: #c36a35; }
 .radio-root.room-fantasy { background: radial-gradient(ellipse at 28% 35%,#54281755,transparent 46%),radial-gradient(ellipse at 72% 38%,#123e7455,transparent 48%),#121317; color-scheme: dark; --ink: #e5a948; }
-.radio-root.room-fantasy .theme-trigger { background: #17191dcc; color: #e3b86d; border-color: #d89f4855; }
+.radio-root.room-fantasy .theme-trigger { color: #e3b86d; }
+.radio-root.room-fantasy .theme-trigger::before { background: #17191dcc; border-color: #d89f4855; }
 .radio-root .dot-fantasy { background: linear-gradient(135deg,#ef6a24 0 48%,#2a89e9 52%); }
 .radio-root .support-panel { min-height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 13px; padding: 18px; text-align: center; }
 .radio-root .support-panel h2,

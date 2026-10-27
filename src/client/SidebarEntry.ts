@@ -3,7 +3,7 @@
  *
  * The host sidebar calls this with `{size, active}` and paints its own active
  * tint; reusing that alias keeps the entry visually identical to its neighbours
- * (`dsh-qiaomu-home`, `qiaomu-reader-dsh`, `dsh-plugin-qiaomu-rss`). The glyph
+ * (`qiaomu-home-dsh`, `qiaomu-reader-dsh`, `dsh-plugin-qiaomu-rss`). The glyph
  * is the existing `RadioIcon` — no new artwork, and `ui.ts` stays the single
  * JSX outlet of the repository.
  */

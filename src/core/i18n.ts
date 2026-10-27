@@ -1,12 +1,15 @@
 import { createContext, createElement, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { translate, resolveLocale, UI_LANGUAGES } from "../original/i18n";
 
-export const LOCALES = ["zh-CN", "en", "es", "fr", "de", "ja"] as const;
+export const LOCALES = ["zh-CN", "en", "es", "fr", "de", "ja", "ko", "pt", "ru", "ar"] as const;
 export type Locale = typeof LOCALES[number];
-export const LOCALE_LABELS: Record<Locale, string> = { "zh-CN": "简体中文", en: "English", es: "Español", fr: "Français", de: "Deutsch", ja: "日本語" };
+export type LanguageSetting = Locale | "auto";
+export const LOCALE_LABELS: Record<Locale, string> = { ko: UI_LANGUAGES.ko, pt: UI_LANGUAGES.pt, ru: UI_LANGUAGES.ru, ar: UI_LANGUAGES.ar, "zh-CN": "简体中文", en: "English", es: "Español", fr: "Français", de: "Deutsch", ja: "日本語" };
 const KEY = "qiaomu-radio-locale-v1";
 
 const zh = {
+  "mood.recommend": "推荐",
   "theme.switch":"切换主题","theme.menu":"播放器主题","theme.fantasy":"魔兽世界 3D","theme.rams":"博朗 · 3D","theme.editorial":"极简","theme.pocket":"iPod","theme.deck":"Winamp","theme.console":"foobar2000",
   "page.now":"正在播放","page.menu":"乔木电台","page.channels":"频道","page.regions":"地区电台","page.stations":"电台列表","page.favorites":"喜欢的电台","page.history":"最近收听","page.search":"搜索电台","page.info":"关于电台","page.support":"支持与关注","page.language":"语言",
   "status.connecting":"连接中…","status.live":"正在直播","status.paused":"已暂停","now.title":"此刻，听点什么","now.prompt":"按播放，遇见下一段声音。","live.radio":"电台直播",
@@ -47,16 +50,16 @@ const ja: Partial<Record<MessageKey,string>> = {
   "theme.switch":"テーマを切り替え","theme.menu":"プレイヤーテーマ","page.now":"再生中","page.menu":"Qiaomu Radio","page.channels":"チャンネル","page.stations":"放送局","page.favorites":"お気に入り","page.history":"履歴","page.search":"検索","page.info":"このラジオについて","page.support":"支援・フォロー","page.language":"言語","status.connecting":"接続中…","status.live":"ライブ","status.paused":"一時停止","now.title":"今、何を聴きますか？","now.prompt":"再生を押して放送局を見つけましょう。","live.radio":"ライブ配信","search.name":"放送局名","search.submit":"検索","search.current":"現在のソースを検索","search.china":"中国の放送局","search.global":"世界の放送局","empty.stations":"チャンネルを選んでください。","empty.favorites":"ハートを押すと保存できます。","empty.history":"聴いた放送局がここに表示されます。","empty.loading":"放送局を検索中…","action.like":"お気に入り","action.unlike":"お気に入り解除","action.dislike":"好みではない・次へ","action.list":"放送局","action.retry":"再試行","action.volume":"音量","action.previous":"前の放送局","action.next":"次の放送局","action.play":"再生","action.pause":"一時停止","action.menu":"メニューを開く","action.back":"メニューへ戻る","action.restore":"表示を戻す","action.select":"選択","language.choose":"表示言語を選択","mood.unwind":"リラックス","mood.focus":"集中","mood.jazz":"ジャズ","mood.classical":"クラシック","mood.energy":"エネルギー","mood.world":"ワールド","support.title":"Qiaomu Radioを支援","support.text":"コーヒーを贈るか、更新をフォローしてください。","support.reward":"寄付","support.follow":"フォロー","support.source":"ソースコード","support.recommend":"Qiaomuおすすめ","support.close":"閉じる","support.followTitle":"Qiaomuをフォロー","support.thanks":"ご支援ありがとうございます。","support.wechat":"WeChat：向阳乔木推荐看",
 };
 
-const messages: Record<Locale, Partial<Record<MessageKey,string>>> = { "zh-CN": zh, en, es, fr, de, ja };
-const globalPickLabels: Record<Locale, string> = {
+const messages: Partial<Record<Locale, Partial<Record<MessageKey,string>>>> = { "zh-CN": zh, en, es, fr, de, ja };
+const globalPickLabels: Partial<Record<Locale, string>> = {
   "zh-CN": "全球精选 20", en: "Global Picks 20", es: "20 selecciones globales",
   fr: "20 sélections mondiales", de: "20 globale Empfehlungen", ja: "世界のおすすめ 20 局",
 };
-const regionPageLabels: Record<Locale, string> = {
+const regionPageLabels: Partial<Record<Locale, string>> = {
   "zh-CN": "地区电台", en: "Stations by region", es: "Emisoras por región",
   fr: "Stations par région", de: "Sender nach Region", ja: "地域別の放送局",
 };
-const regionAutoLabels: Record<Locale, string> = {
+const regionAutoLabels: Partial<Record<Locale, string>> = {
   "zh-CN": "自动判断地区", en: "Detect my region", es: "Detectar mi región",
   fr: "Détecter ma région", de: "Region automatisch erkennen", ja: "地域を自動判定",
 };
@@ -69,10 +72,12 @@ export function detectLocale(languages: readonly string[] = navigator.languages)
   return "en" as Locale;
 }
 export function message(locale: Locale, key: MessageKey) {
-  if (key === "search.global") return globalPickLabels[locale];
-  if (key === "page.regions") return regionPageLabels[locale];
-  if (key === "region.auto") return regionAutoLabels[locale];
-  return messages[locale][key] || en[key] || zh[key];
+  if (key === "mood.recommend") return translate("推荐", resolveLocale(locale.split(/[-_]/)[0]));
+  if (key === "search.global") return globalPickLabels[locale] || globalPickLabels.en!;
+  if (key === "page.regions") return regionPageLabels[locale] || regionPageLabels.en!;
+  if (key === "region.auto") return regionAutoLabels[locale] || regionAutoLabels.en!;
+  const source = zh[key], original = translate(source, resolveLocale(locale.split(/[-_]/)[0]));
+  return messages[locale]?.[key] || (original !== source ? original : en[key]) || source;
 }
 export function regionName(locale: Locale, code: string, fallback: string) {
   try { return code ? new Intl.DisplayNames([locale], { type: "region" }).of(code.toUpperCase()) || fallback : fallback; } catch { return fallback; }
@@ -80,37 +85,43 @@ export function regionName(locale: Locale, code: string, fallback: string) {
 
 export type I18nValue = {
   locale: Locale;
-  setLocale: (locale: Locale) => void;
+  languageSetting: LanguageSetting;
+  setLocale: (locale: LanguageSetting) => void;
   t: (key: MessageKey) => string;
 };
 
 const I18n = createContext<I18nValue>({
   locale: "zh-CN",
+  languageSetting: "auto",
   setLocale: () => {},
   t: (key: MessageKey) => zh[key] as string,
 });
 
 /** Keeps the interface language in local storage and on `<html lang>`. */
 export function I18nProvider(props: { children?: ReactNode }) {
-  const [locale, setLocale] = useState<Locale>(() => {
+  const [languageSetting, setLocale] = useState<LanguageSetting>(() => {
     const saved = readStoredLocale();
-    return saved && LOCALES.includes(saved) ? saved : detectLocale();
+    return saved && LOCALES.includes(saved as Locale) ? saved : "auto";
   });
+  const [systemLocale, setSystemLocale] = useState<Locale>(() => detectLocale());
+  useEffect(() => { const changed = () => setSystemLocale(detectLocale()); window.addEventListener("languagechange", changed); return () => window.removeEventListener("languagechange", changed); }, []);
+  const locale = languageSetting === "auto" ? systemLocale : languageSetting;
   useEffect(() => {
-    try { localStorage.setItem(KEY, locale); } catch { /* private mode */ }
+    try { localStorage.setItem(KEY, languageSetting); } catch { /* private mode */ }
     if (typeof document !== "undefined") document.documentElement.lang = locale;
-  }, [locale]);
+    document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+  }, [locale, languageSetting]);
   const value = useMemo<I18nValue>(
-    () => ({ locale, setLocale, t: (key: MessageKey) => message(locale, key) }),
-    [locale],
+    () => ({ locale, languageSetting, setLocale, t: (key: MessageKey) => message(locale, key) }),
+    [locale, languageSetting],
   );
   // createElement keeps this module JSX-free: the same file compiles into the
   // DSH client bundle (where JSX is not transformed) and the preview harness.
   return createElement(I18n.Provider, { value }, props.children);
 }
 
-function readStoredLocale(): Locale | null {
-  try { return localStorage.getItem(KEY) as Locale | null; } catch { return null; }
+function readStoredLocale(): LanguageSetting | null {
+  try { return localStorage.getItem(KEY) as LanguageSetting | null; } catch { return null; }
 }
 
 export function useI18n(): I18nValue {

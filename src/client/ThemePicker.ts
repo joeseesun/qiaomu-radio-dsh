@@ -3,7 +3,7 @@
  *
  * Mirrors the reference menu: a round palette trigger, a `role="menu"` popover of
  * `menuitemradio` rows, Escape to dismiss, and an "asleep" state that fades the
- * control away until the next pointer or key interaction.
+ * control to a quieter visible state until the next pointer or key interaction.
  */
 
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
@@ -89,7 +89,7 @@ export function ThemePicker(props: { controller: RadioController }): ReactNode {
         "aria-expanded": open ? "true" : "false",
         onClick: () => setOpen(!open),
       },
-      PaletteIcon({ size: 20, strokeWidth: 1.5 }),
+      PaletteIcon({ size: 16, strokeWidth: 1.7 }),
     ),
     open
       ? h(

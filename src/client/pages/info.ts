@@ -1,5 +1,6 @@
 /** `info` — data provenance, privacy note and the station's own website. */
 
+import { updateText } from "../../original/update-notes-i18n";
 import type { ReactNode } from "react";
 import { ExternalLinkIcon } from "../icons";
 import { h } from "../ui";
@@ -24,6 +25,7 @@ export function renderInfo(controller: RadioController): ReactNode {
     h("h2", null, "Qiaomu Radio"),
     h("p", null, controller.t("info.text")),
     safeHomepage ? externalLink(safeHomepage, controller.t("info.website")) : null,
+    h("button", { type: "button", className: "qiaomu-update-notes-link", onClick: () => controller.showUpdates() }, updateText(controller.locale,"view")),
     externalLink("https://www.radio-browser.info/", "Radio Browser"),
     externalLink("https://radio.qiaomu.ai/", "radio.qiaomu.ai"),
   );

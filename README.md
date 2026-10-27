@@ -1,6 +1,8 @@
 # 乔木电台 · DSH 插件
 
-把 [乔木电台](https://radio.qiaomu.ai/) 的五种播放器环境搬进 DeepSeek Harness：发现并收听全球直播电台，
+> 此分支是 0.2.0 迁移候选，尚未发布或安装验收。下方正式安装包仍为 0.1.1；候选能力和验证边界见 [原版适配记录](docs/ORIGINAL-ADAPTATION.md)。
+
+把 [乔木电台](https://radio.qiaomu.ai/) 的四种播放器环境搬进 DeepSeek Harness：发现并收听全球直播电台，
 让音乐陪着你工作与阅读。
 
 **中文** | [English](#english) | [参考实现](../qiaomu-radio) · [在线电台](https://radio.qiaomu.ai/)
@@ -25,19 +27,21 @@ dsh plugin --profile web add ./qiaomu-dsh-radio-0.1.1.tgz
 
 | 能力 | 你得到什么 |
 | --- | --- |
-| 五种播放器环境 | 魔兽世界 3D、博朗 · 3D、iPod、Winamp、foobar2000 |
+| 四种播放器环境 | 魔兽世界 3D、博朗 · 3D、iPod、Winamp；旧 console/editorial 设置迁移到博朗 |
 | 全球电台目录 | Radio Browser 真实直播台；目录不可用时使用内置备用台单 |
-| 场景频道 | 松一口气 / 安静做事 / 爵士时刻 / 古典留白 / 需要能量 / 去远方 |
+| 场景频道 | 推荐 / 松一口气 / 安静做事 / 爵士时刻 / 古典留白 / 需要能量 / 去远方 |
+| 原版分类目录 | 音乐、内容、声音、语言与地区组合筛选，保留原面板与样式 |
 | 本机口味记忆 | 喜欢、跳过、收听历史、电台可靠性，只存在本机 |
 | 播放控制 | 播放、暂停、上一台、下一台、音量、失败自动切换下一台 |
-| 六种界面语言 | 简体中文、English、Español、Français、Deutsch、日本語 |
+| 十种界面语言 | 原版十种语言与跟随系统；DSH 专有文案缺译时回退英语 |
+| Home 与后台收听 | 原版「继续听」来源；切换面板保留播放器，停用插件才释放 |
 
 ## 目录
 
 ```text
 src/core/       纯逻辑：类型、主题、推荐、播放策略、手势数学    （可单测，无框架）
 src/host/       宿主服务：电台目录、播放地址、now playing、流代理、口味存储
-src/client/     浏览器界面：状态容器、播放引擎、五种皮肤、十二个屏幕页面
+src/client/     浏览器界面：状态容器、播放引擎、四种皮肤、十二个屏幕页面
 src/dsh/        DSH 接线：路由注册、页面渲染、Cordis 插件入口
 preview/        开发预览：与宿主同一套服务的本地服务器
 styles/         播放器样式
@@ -148,7 +152,7 @@ GitHub Actions 自动执行类型检查、测试和构建。依赖、生成产�
 
 ## English
 
-Qiaomu Radio brings five radio player environments to DeepSeek Harness, with global
+Qiaomu Radio brings four radio player environments to DeepSeek Harness, with global
 live stations, mood channels, playback controls, and locally stored preferences.
 
 Requires Node.js 22+ and npm for development, and DeepSeek Harness for integration.

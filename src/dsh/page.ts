@@ -60,7 +60,7 @@ function escapeAttribute(value: string): string {
  * the canvas behind the player.
  *
  * `--radio-bg` is declared on `.radio-root`, not on `:root`, so the `body` rule
- * cannot read it. The shell therefore mirrors the six theme values literally and
+ * cannot read it. The shell therefore mirrors the available theme values literally and
  * keeps them in sync through the theme attribute that the app puts on the mount
  * element (`[data-theme]` on `#radio-root`). The body sits *behind* the root, so
  * these values are only ever visible once the player has painted its own themed
@@ -75,7 +75,6 @@ const PAGE_SHELL_CSS = [
   "body.radio-page:has(main.radio-root[data-theme=rams]){background:#e3e2d8;}",
   "body.radio-page:has(main.radio-root[data-theme=pocket]){background:#e8e8e3;}",
   "body.radio-page:has(main.radio-root[data-theme=deck]){background:#232630;}",
-  "body.radio-page:has(main.radio-root[data-theme=console]){background:#373b3e;}",
   "body.radio-page:has(main.radio-root[data-theme=fantasy]){background:#121317;}",
 ].join("");
 

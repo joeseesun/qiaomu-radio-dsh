@@ -124,20 +124,27 @@ export function rememberStation(
 
 /** Tolerate older or partial persisted profiles. */
 export function normalizeProfile(input: unknown): TasteProfile {
-  const parsed = (input ?? {}) as Partial<TasteProfile>;
+  const parsed = input && typeof input === 'object' && !Array.isArray(input) ? input as Partial<TasteProfile> : {};
+  const ids = (value: unknown) => Array.isArray(value) ? [...new Set(value.filter((id): id is string => typeof id === 'string' && id.length > 0 && id.length <= 512))] : [];
+  const object = (value: unknown): Record<string, unknown> => value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+  const safeKey = (key: string) => !['__proto__', 'constructor', 'prototype'].includes(key);
+  const finite = (value: unknown) => typeof value === 'number' && Number.isFinite(value);
+  const history = (Array.isArray(parsed.history) ? parsed.history : []).filter(entry => {
+    const row = entry?.station;
+    return row && typeof entry.listenedAt === 'string' && typeof row.id === 'string' && typeof row.name === 'string' &&
+      typeof row.streamUrl === 'string' && /^https:\/\//i.test(row.streamUrl) && Array.isArray(row.tags) && row.tags.every(tag => typeof tag === 'string') &&
+      ['homepage','favicon','country','countryCode','language','codec'].every(key => typeof (row as unknown as Record<string, unknown>)[key] === 'string') &&
+      [row.bitrate,row.votes,row.clickCount].every(finite);
+  }).slice(0, 24);
+  const reliability = Object.fromEntries(Object.entries(object(parsed.stationReliability)).filter(([key, raw]) => {
+    const value = object(raw); return safeKey(key) && ['successes','failures','consecutiveFailures'].every(name => finite(value[name]) && (value[name] as number) >= 0);
+  }));
   return {
-    ...EMPTY_PROFILE,
-    ...parsed,
-    likedStationIds: Array.isArray(parsed.likedStationIds) ? parsed.likedStationIds : [],
-    dislikedStationIds: Array.isArray(parsed.dislikedStationIds) ? parsed.dislikedStationIds : [],
-    tagWeights: parsed.tagWeights && typeof parsed.tagWeights === "object" ? parsed.tagWeights : {},
-    history: Array.isArray(parsed.history) ? parsed.history : [],
-    stationReliability:
-      parsed.stationReliability && typeof parsed.stationReliability === "object"
-        ? parsed.stationReliability
-        : {},
-    preferredCountryCode: /^[A-Z]{2}$/.test(String(parsed.preferredCountryCode || ""))
-      ? (parsed.preferredCountryCode as string)
-      : null,
+    likedStationIds: ids(parsed.likedStationIds),
+    dislikedStationIds: ids(parsed.dislikedStationIds),
+    tagWeights: Object.fromEntries(Object.entries(object(parsed.tagWeights)).filter((entry): entry is [string, number] => safeKey(entry[0]) && finite(entry[1]))),
+    history,
+    stationReliability: reliability as TasteProfile['stationReliability'],
+    preferredCountryCode: /^[A-Z]{2}$/.test(String(parsed.preferredCountryCode || '')) ? parsed.preferredCountryCode as string : null,
   };
 }
