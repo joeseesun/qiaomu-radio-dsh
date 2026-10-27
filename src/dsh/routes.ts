@@ -238,6 +238,7 @@ async function handleApi(
       const countryCode = input?.countryCode ? String(input.countryCode) : null;
       const query = input?.query ? String(input.query) : undefined;
       const result = await service.catalog({
+        filter: input?.filter && typeof input.filter === "object" ? input.filter as never : undefined,
         mood: mood as never,
         source: source as never,
         countryCode,

@@ -11,7 +11,7 @@ export type RadioTheme = {
   accent: string;
 };
 
-/** The five reference environments, in picker order. */
+/** The four available environments, in picker order. */
 export const RADIO_THEMES: RadioTheme[] = [
   {
     id: "fantasy",
@@ -49,15 +49,6 @@ export const RADIO_THEMES: RadioTheme[] = [
     source: "radio-browser",
     accent: "#c8ef55",
   },
-  {
-    id: "console",
-    label: "foobar2000",
-    family: "资料库播放器",
-    note: "密集信息与专业监听",
-    mood: "classical",
-    source: "radio-browser",
-    accent: "#75a7bd",
-  },
 ];
 
 export function getTheme(themeId: ThemeId): RadioTheme {
@@ -74,6 +65,7 @@ export function themeQuery(themeId: ThemeId): { mood: MoodId; source: StationSou
 
 /** Scene channel copy, matching the reference picker. */
 export const MOODS: Array<{ id: MoodId; label: string; note: string; accent: string }> = [
+  { id: "recommend", label: "推荐", note: "根据收听与收藏发现电台", accent: "#2f6f69" },
   { id: "unwind", label: "松一口气", note: "轻柔、松弛、缓慢", accent: "#d75f3b" },
   { id: "focus", label: "安静做事", note: "氛围、器乐、低干扰", accent: "#2f6f69" },
   { id: "jazz", label: "爵士时刻", note: "爵士、灵魂、即兴", accent: "#a66a26" },

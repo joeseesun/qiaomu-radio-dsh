@@ -1,3 +1,4 @@
+import { translate, resolveLocale } from "../../original/i18n";
 /** `search` — station-name search plus the two curated sources. */
 
 import type { ChangeEvent, FormEvent, ReactNode } from "react";
@@ -33,6 +34,7 @@ export function renderSearch(controller: RadioController): ReactNode {
       h("button", { type: "submit", "aria-label": controller.t("search.submit") }, SearchIcon({ size: 18 })),
     ),
     h("p", null, controller.t("search.current")),
+    h("button", { type: "button", className: "source-choice", onClick: () => controller.browseDirectory() }, translate("浏览电台", resolveLocale(controller.locale.split(/[-_]/)[0])), ChevronRightIcon({ size: 16 })),
     h(
       "button",
       {

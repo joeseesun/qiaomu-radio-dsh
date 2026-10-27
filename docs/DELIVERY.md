@@ -199,7 +199,7 @@ GET  /qiaomu-radio/nope.js                           404  27 B     正常 404
 ### 2.5.1 真实安装进 `desktop` profile（本轮执行）
 
 按官方 bundle 模式安装（本包现在**自带** `cordis.patch.yml` + `dsh.bundle.patch`，与
-`dsh-plugin-qiaomu-rss` / `dsh-qiaomu-home` 一致，用户不必再造本地 bundle 包）：
+`dsh-plugin-qiaomu-rss` / `qiaomu-home-dsh` 一致，用户不必再造本地 bundle 包）：
 
 ```bash
 cd ~/.dsh/profiles/desktop
@@ -541,3 +541,29 @@ node tools/cdp-gui-probe.mjs 9226 "http://127.0.0.1:4199/?token=$TOKEN"   # 应�
 
 **注意**：`tools/cdp-*.mjs` 需要本地有 `ws`（`npm install --no-save ws@8`），且必须留在项目
 目录内运行，否则 Node 解析不到该依赖。
+## 16. 对照原版同步（2026-10-06）
+
+上游 `qiaomu-radio`（Obsidian 插件）在 DSH 分叉点（2026-09-30，含 58b2933）之后有三个提交：
+
+| 上游提交 | 内容 | 结论 |
+| --- | --- | --- |
+| d693796 + 176ca8a（1.2.2） | Obsidian workspace 分隔线跟随面板配色（`plugin-src/pane-dividers.ts`、`.workspace-leaf-resize-handle` 样式） | **不适用**：纯 Obsidian 宿主 DOM，DSH 无对应面 |
+| 8d2bb43（1.2.3） | 深色调色板对比度修复 ×3 | 仅转盘按钮可映射，已移植 |
+
+1.2.3 三处的映射：
+
+- `[data-theme="pocket"] .qiaomu-radio__wheel button` `#8d9683→#626d57` →
+  **已移植**：`styles/20-reference.css` `.ipod-wheel button` `#909986→#626d57`；
+  DSH 深色模式下转盘是深色的（原版无此状态），在 `styles/30-skins.css` 的
+  `.dsw-dark/.dark .ipod-wheel button` 固定回 `#909986`，深色外观零变化。
+- `.qiaomu-radio__ipod-top > span` `#969b90→#626b59` → 不适用：原版是 iPod 机身顶部的
+  功能头栏（「iPod」+「返回原版」按钮）；DSH 对应位置是装饰刻字（设计即低对比），无功能文本。
+- `[data-theme="classic"] .qiaomu-radio__browse-apply`（强调色底+白字 → 主题前景/背景）→
+  不适用：DSH 搜索页为透明行式按钮（`.source-choice`），不存在强调色底按钮。
+
+自检证据：
+
+- `npm run check` 全绿（typecheck + 13 文件 113 测试 + build 产出 `lib/`）。
+- `npm run preview` 真机看过 pocket 皮肤：浅色下转盘图标为 `rgb(98,109,87)`（#626d57），
+  明显比旧值清晰；挂 `.dsw-dark` 后转盘深色、图标保持 `rgb(144,153,134)`（#909986）；
+  620px 窄容器完整渲染、`scrollWidth == clientWidth`（无横向滚动）。

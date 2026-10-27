@@ -232,8 +232,8 @@ export function createRadioService(options: RadioServiceOptions = {}): RadioServ
   }
 
   /** Radio Browser search: one mood tag query per tag, merged and deduped. */
-  async function searchStations(mood: CatalogRequest["mood"], query: string): Promise<CatalogResult> {
-    const key = `radio-browser:${mood}:${query}`;
+  async function searchStations(mood: CatalogRequest["mood"], query: string, filter: NonNullable<CatalogRequest["filter"]> = {}): Promise<CatalogResult> {
+    const key = JSON.stringify(["radio-browser", mood, query, filter.tag || "", filter.country || "", filter.language || ""]);
     const cached = catalogCache.get(key);
     if (cached && now() - cached.at < catalogTtlMs) return { ...cached.result, cached: true };
 
@@ -245,8 +245,11 @@ export function createRadioService(options: RadioServiceOptions = {}): RadioServ
         reverse: "true",
       });
       let raw: RawCatalogStation[];
-      if (query) {
-        base.set("name", query);
+      if (filter.country) base.set("countrycode", filter.country);
+      if (filter.language) { base.set("language", filter.language); base.set("languageExact", "true"); }
+      if (query || Object.keys(filter).length) {
+        if (query) base.set("name", query);
+        if (filter.tag) { base.set("tag", filter.tag); base.set("tagExact", "true"); }
         raw = asRawList(await requestJson(`/json/stations/search?${base}`));
       } else {
         const tags = MOOD_TAGS[mood] ?? MOOD_TAGS.focus;
@@ -271,6 +274,7 @@ export function createRadioService(options: RadioServiceOptions = {}): RadioServ
         cached: false,
       });
     } catch {
+      if (Object.keys(filter).length) return { stations: [], source: "radio-browser", cached: false, warning: "Filtered directory unavailable. Retry or clear filters." };
       const fallback = filterCuratedStations(CHINA_STATIONS, query);
       return {
         stations: fallback.length > 0 ? fallback : [...CHINA_STATIONS],
@@ -285,6 +289,14 @@ export function createRadioService(options: RadioServiceOptions = {}): RadioServ
     async catalog(request: CatalogRequest): Promise<CatalogResult> {
       const query = String(request.query ?? "").trim().slice(0, 80).toLowerCase();
 
+      const filter: NonNullable<CatalogRequest["filter"]> = {};
+      for (const key of ["tag", "language"] as const) {
+        const value = request.filter?.[key];
+        if (typeof value === "string" && value.trim()) filter[key] = value.trim().slice(0, 80);
+      }
+      const region = countryCode(request.filter?.country);
+      if (region) filter.country = region;
+      if (Object.keys(filter).length) return searchStations(request.mood, query, filter);
       if (request.source === "china-curated") {
         return {
           stations: filterCuratedStations(CHINA_STATIONS, query),

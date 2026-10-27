@@ -51,6 +51,7 @@ export const FALLBACK_STATIONS: Station[] = [
 
 /** Tags each mood channel searches for, used by the fallback filter. */
 export const MOOD_TAGS: Record<MoodId, string[]> = {
+  recommend: ["ambient", "downtempo", "instrumental", "electronic"],
   unwind: ["chillout", "lounge", "easy listening", "ambient", "relax", "mellow"],
   focus: ["ambient", "downtempo", "instrumental", "electronic"],
   jazz: ["jazz", "smooth jazz", "soul", "blues"],
@@ -61,7 +62,7 @@ export const MOOD_TAGS: Record<MoodId, string[]> = {
 
 /** Filter the fallback list down to one mood, never returning an empty list. */
 export function fallbackStationsFor(mood: MoodId, limit = 12): Station[] {
-  const tags = MOOD_TAGS[mood];
+  const tags = MOOD_TAGS[mood] || MOOD_TAGS.focus;
   const matched = FALLBACK_STATIONS.filter((item) =>
     item.tags.some((tag) => tags.some((wanted) => tag.toLowerCase().includes(wanted))),
   );

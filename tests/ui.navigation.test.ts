@@ -169,6 +169,17 @@ async function press(surface: Surface, key: string): Promise<void> {
 /* -------------------------------------------------------------------- tests */
 
 describe("ui.navigation — in-screen browsing", () => {
+  it("opens the original directory from search and forwards its selected filter without starting playback", async () => {
+    const surface = await mount(); await press(surface, "Escape"); await click(surface, "搜索电台");
+    const browse = [...surface.container.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent === '浏览电台')!;
+    await act(async () => browse.click());
+    await act(async () => document.querySelector<HTMLButtonElement>('[data-filter-key="tag"][data-filter-value="news"]')!.click());
+    await act(async () => document.querySelector<HTMLButtonElement>('.qiaomu-radio__browse-apply')!.click());
+    await settle();
+    expect(surface.host.requests.at(-1)).toMatchObject({ mood: 'recommend', source: 'radio-browser', filter: { tag: 'news' } });
+    expect(surface.page()).toBe('stations'); expect(surface.host.played).toEqual([]);
+    expect(document.querySelector('.radio-directory-host')).toBeNull();
+  });
   it("walks menu → channels → stations → now", async () => {
     const fetchSpy = vi.fn(() => Promise.reject(new Error("no network in tests")));
     vi.stubGlobal("fetch", fetchSpy);
@@ -285,7 +296,7 @@ describe("ui.navigation — in-screen browsing", () => {
     const trigger = surface.container.querySelector<HTMLButtonElement>(".theme-trigger")!;
     await act(async () => { trigger.click(); });
     const target = [...surface.container.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]')]
-      .find(item => item.textContent?.includes("foobar2000"))!;
+      .find(item => item.textContent?.includes("Winamp"))!;
     await act(async () => { target.click(); });
     await settle();
     expect(surface.host.played).toEqual(beforePlayed);
@@ -307,7 +318,7 @@ describe("ui.navigation — in-screen browsing", () => {
     });
     await settle(1);
     const items = [...surface.container.querySelectorAll<HTMLElement>('[role="menuitemradio"]')];
-    expect(items).toHaveLength(5);
+    expect(items).toHaveLength(4);
     expect(items.map((item) => item.getAttribute("aria-checked"))).toContain("true");
 
     const fantasy = items.find((item) => item.textContent?.includes("魔兽世界"))!;

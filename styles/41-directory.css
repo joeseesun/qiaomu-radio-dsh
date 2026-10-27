@@ -1,0 +1,56 @@
+/* Original browse component styles; the host only supplies a viewport and palette. */
+@scope (.radio-directory-host) {
+.qiaomu-radio__browse-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  padding: 132px 24px 24px 36%;
+}
+.qiaomu-radio__browse-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(480px, 100%);
+  max-height: 100%;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  padding: 20px;
+  border: 1px solid var(--qr-line);
+  border-radius: 12px;
+  background: var(--background-primary);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 5%), 0 16px 48px rgb(0 0 0 / 12%);
+}
+.qiaomu-radio__browse-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.qiaomu-radio__browse-head h2 { margin: 0; font-size: 18px; font-weight: 600; }
+.qiaomu-radio__browse-head button { width: 44px; min-height: 44px; padding: 12px; }
+.qiaomu-radio__browse-head svg { width: 18px; height: 18px; }
+.qiaomu-radio__browse-panel h3 { margin: 16px 0 6px; color: var(--text-muted); font-size: 12px; font-weight: 500; }
+.qiaomu-radio__browse-choices { display: flex; flex-wrap: wrap; gap: 4px; }
+.qiaomu-radio__browse-choices button { min-height: 40px; padding: 8px 12px; border-radius: 8px; color: var(--text-normal); }
+.qiaomu-radio .qiaomu-radio__browse-choices button[aria-pressed="true"] { color: var(--qr-accent); background: var(--qr-accent-soft); font-weight: 600; }
+.qiaomu-radio .qiaomu-radio__browse-choices button:hover { background: var(--qr-panel); }
+.qiaomu-radio .qiaomu-radio__browse-choices button[aria-pressed="true"]:hover { background: var(--qr-accent-soft); }
+.qiaomu-radio__browse-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-bottom: 16px; }
+.qiaomu-radio__browse-head { flex-shrink: 0; }
+.qiaomu-radio__browse-advanced { margin-top: 20px; }
+.qiaomu-radio__browse-advanced summary { padding: 12px 0; color: var(--text-muted); cursor: pointer; font-size: 13px; }
+.qiaomu-radio__browse-footer { display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 12px; padding-top: 16px; border-top: 1px solid var(--qr-line); }
+.qiaomu-radio[data-theme="classic"] button.qiaomu-radio__browse-reset { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--text-normal); padding: 8px 12px; border: 1px solid var(--qr-line); border-radius: 8px; }
+.qiaomu-radio__browse-reset svg { width: 16px; height: 16px; }
+.qiaomu-radio__browse-reset:disabled { opacity: .35; }
+.qiaomu-radio[data-theme="classic"] button.qiaomu-radio__browse-apply,
+.qiaomu-radio[data-theme="classic"] button.qiaomu-radio__browse-apply:hover { min-height: 44px; padding: 10px 18px; background: var(--text-normal); color: var(--background-primary); border-radius: 8px; }
+.qiaomu-radio__browse-trigger { max-width: 100%; }
+.qiaomu-radio__browse-trigger > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qiaomu-radio[dir="rtl"] .qiaomu-radio__browse-layer { padding: 132px 36% 24px 24px; }
+@container (max-width: 760px) {
+  .qiaomu-radio .qiaomu-radio__browse-layer,
+  .qiaomu-radio[dir="rtl"] .qiaomu-radio__browse-layer { display: flex; align-items: flex-end; padding: 16px; background: rgb(0 0 0 / 12%); }
+  .qiaomu-radio__browse-panel { width: 100%; max-height: 85%; }
+  .qiaomu-radio__browse-choices button { min-height: 44px; }
+}
+
+
+}
+.radio-root .radio-directory-host { position: fixed; inset: 0; z-index: 1100; container-type: inline-size; --qr-line: var(--radio-line); --qr-panel: var(--radio-bg); --qr-accent: var(--radio-ink); --qr-accent-soft: var(--radio-bg); --text-normal: var(--radio-ink); --text-muted: var(--radio-muted); --background-primary: var(--radio-surface); color: var(--radio-ink); }
+.radio-directory-host button { font: inherit; cursor: pointer; border: 0; background: transparent; color: inherit; }
+.radio-directory-host .qiaomu-radio__sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

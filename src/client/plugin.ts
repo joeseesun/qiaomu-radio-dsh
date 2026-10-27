@@ -31,6 +31,8 @@
 
 import type { ReactNode } from "react";
 
+import { createRadioFrame } from "./radio-frame";
+import { h } from "./ui";
 import { RadioPanel } from "./RadioPanel";
 import { RadioSidebarEntry } from "./SidebarEntry";
 
@@ -52,10 +54,15 @@ type SlotsLike = {
   register(options: Record<string, unknown>, component: SlotComponent): unknown;
 };
 
-type ClientContextLike = { slots: SlotsLike };
+type ClientContextLike = {
+  slots: SlotsLike;
+  layout: { selectPanel(id: string): void };
+  effect(run: () => (() => void) | void): unknown;
+  inject(keys: string[], run: (ready: any) => (() => void) | void): unknown;
+};
 
 /** Services this client half needs: only the slot registry. */
-export const inject: string[] = ["slots"];
+export const inject: string[] = ["slots", "layout"];
 
 /**
  * Client-half plugin body.
@@ -65,8 +72,19 @@ export const inject: string[] = ["slots"];
  * silently drop the entry.
  */
 export function apply(ctx: ClientContextLike): void {
+  const runtime = createRadioFrame(() => ctx.layout.selectPanel(PANEL_ID));
+  ctx.effect(() => () => runtime.dispose());
+  ctx.inject(["qiaomuHome"], ready => ready.qiaomuHome.register("qiaomu-radio", runtime.provider, { label: "Qiaomu Radio" }));
+  ctx.inject(["shortcuts"], ready => {
+    const remove = [
+      ready.shortcuts.register({ id: "qiaomu-radio.updates", label: () => "Qiaomu Radio · 查看更新内容", aliases: ["Radio release notes"], defaults: {}, regions: ["page", "editable"], modals: [], resolve: () => ({ status: "handled", run: () => { ctx.layout.selectPanel(PANEL_ID); runtime.command({ kind: "updates" }); } }) }),
+      ready.shortcuts.register({ id: "qiaomu-radio.open", label: () => "Qiaomu Radio · 打开电台", aliases: ["Open radio"], defaults: {}, regions: ["page", "editable"], modals: [], resolve: () => ({ status: "handled", run: () => ctx.layout.selectPanel(PANEL_ID) }) }),
+      ready.shortcuts.register({ id: "qiaomu-radio.toggle", label: () => "Qiaomu Radio · 播放或暂停", aliases: ["Toggle radio playback"], defaults: {}, regions: ["page", "editable"], modals: [], resolve: () => ({ status: "handled", run: () => runtime.command({ kind: "toggle" }) }) }),
+    ];
+    return () => remove.forEach(dispose => dispose());
+  });
   ctx.slots.inject("main", () =>
-    ctx.slots.register({ name: "main", key: PANEL_ID }, RadioPanel as unknown as SlotComponent),
+    ctx.slots.register({ name: "main", key: PANEL_ID }, (() => h(RadioPanel, { runtime })) as unknown as SlotComponent),
   );
   ctx.slots.inject("sidebar.panellist", () =>
     ctx.slots.register(

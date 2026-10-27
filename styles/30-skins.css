@@ -16,9 +16,13 @@
   transition: opacity 180ms ease-out;
 }
 
+.radio-root .theme-trigger:hover::before,
+.radio-root .theme-trigger[aria-expanded="true"]::before {
+  background: #ffffffb8;
+}
+
 .radio-root .theme-picker.is-asleep:not(:focus-within):not(:hover) {
-  opacity: 0;
-  pointer-events: none;
+  opacity: 0.68;
 }
 
 /* ------------------------------------------------- row + status details --- */
@@ -1147,6 +1151,12 @@
   border-color: #3d4347;
 }
 
+/* 深色下转盘本身是深色的，转盘按钮保持浅色图标（原版无深色转盘，此为 DSH 独有状态）。 */
+.dsw-dark .radio-root .ipod-wheel button,
+.dark .radio-root .ipod-wheel button {
+  color: #909986;
+}
+
 .dsw-dark .radio-root .ipod-wheel .wheel-center,
 .dark .radio-root .ipod-wheel .wheel-center {
   background: linear-gradient(135deg, #3b4247, #2c3236);
@@ -1171,11 +1181,10 @@
   background: #333a41;
 }
 
-.dsw-dark .radio-root .theme-trigger,
-.dark .radio-root .theme-trigger {
+.dsw-dark .radio-root .theme-trigger::before,
+.dark .radio-root .theme-trigger::before {
   border-color: #ffffff26;
   background: #ffffff14;
-  color: #dfe3e5;
 }
 
 .dsw-dark .radio-root .theme-picker,

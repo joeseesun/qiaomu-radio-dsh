@@ -1,3 +1,4 @@
+import { translate, resolveLocale } from "../../original/i18n";
 /**
  * The screen registry: what each page renders, and which rows it offers.
  *
@@ -135,15 +136,15 @@ export function rowsForPage(controller: RadioController): PageRow[] {
         })),
       ];
     case "language":
-      return LOCALES.map<PageRow>((item) => ({
+      return [{ id: "auto", label: translate("跟随系统", resolveLocale(locale.split(/[-_]/)[0])), checked: controller.languageSetting === "auto", action: () => { controller.setLocale("auto"); controller.openPage("menu"); } }, ...LOCALES.map<PageRow>((item) => ({
         id: item,
         label: LOCALE_LABELS[item],
-        checked: item === locale,
+        checked: item === controller.languageSetting,
         action: () => {
           controller.setLocale(item);
           controller.openPage("menu");
         },
-      }));
+      }))];
     case "stations":
       return controller.stations.map((station, index) => stationRow(controller, station, index));
     case "favorites":

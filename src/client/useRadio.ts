@@ -1,3 +1,5 @@
+import { RadioDirectoryBrowser } from "./directory-browser";
+import type { DirectoryFilter } from "../core/types";
 /**
  * The radio state container (docs/CONTRACTS.md §3).
  *
@@ -7,8 +9,9 @@
  * keyboard shortcuts. Skins and pages are pure views over this controller.
  */
 
+import { useRadioUpdateNotes } from "./update-notes";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { message, useI18n, type Locale, type MessageKey } from "../core/i18n";
+import { message, useI18n, type Locale, type LanguageSetting, type MessageKey } from "../core/i18n";
 import {
   MAX_AUTOPLAY_ATTEMPTS,
   PREFETCH_STATION_COUNT,
@@ -65,6 +68,7 @@ export type RadioController = {
   liked: boolean;
   profile: TasteProfile;
   locale: Locale;
+  languageSetting: LanguageSetting;
   // ---- contract actions ----
   toggle(): void;
   next(): void;
@@ -81,6 +85,8 @@ export type RadioController = {
   setVolume(value: number): void;
   retry(): void;
   close(): void;
+  showUpdates(): void;
+  browseDirectory(): void;
 
   // ---- extras the skins and pages share ----
   /** Playback is audibly buffering or reconnecting. */
@@ -99,7 +105,7 @@ export type RadioController = {
   setSearchDraft(value: string): void;
   moods: RadioMoodOption[];
   t(key: MessageKey): string;
-  setLocale(locale: Locale): void;
+  setLocale(locale: LanguageSetting): void;
   toggleMute(): void;
   /** In-device screen navigation. */
   page: RadioPage;
@@ -127,7 +133,7 @@ export type RadioController = {
 /** Only ids that exist in the catalog count; `getTheme` silently falls back. */
 function knownTheme(value: string | null | undefined): ThemeId | null {
   if (!value) return null;
-  if (value === "editorial") return "rams";
+  if (value === "editorial" || value === "console") return "rams";
   return RADIO_THEMES.some((theme) => theme.id === value) ? (value as ThemeId) : null;
 }
 
@@ -170,15 +176,17 @@ function somaChannel(station: Station | null): string | null {
 export function useRadio(options: RadioMountOptions): RadioController {
   const host = options.host;
   const onClose = options.onClose;
-  const { locale, setLocale, t } = useI18n();
+  const { locale, languageSetting, setLocale, t } = useI18n();
+  const showUpdates = useRadioUpdateNotes(locale);
 
   // ---------------------------------------------------------------- state ---
   const [themeId, setThemeId] = useState<ThemeId>(() => resolveThemeId(host, options.initialTheme));
   const theme = getTheme(themeId);
+  const [preferences] = useState(() => host.storage.loadPreferences?.() ?? null);
   const [profile, setProfile] = useState<TasteProfile>(() =>
     normalizeProfile(host.storage.loadProfile()),
   );
-  const [mood, setMood] = useState<MoodId>(theme.mood);
+  const [mood, setMood] = useState<MoodId>(preferences?.mood ?? theme.mood);
   const [source, setSource] = useState<StationSource>(() => {
     if (profile.preferredCountryCode) return "regional";
     // Reference `loadInitialSource`: an explicitly chosen skin seeds its source,
@@ -193,12 +201,15 @@ export function useRadio(options: RadioMountOptions): RadioController {
   const [buffering, setBuffering] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const [volume, setVolumeState] = useState(0.72);
-  const [muted, setMuted] = useState(false);
+  const [volume, setVolumeState] = useState(preferences?.volume ?? 0.72);
+  const [muted, setMuted] = useState(preferences?.volume === 0);
   const [failedIds, setFailedIds] = useState<string[]>([]);
   const [page, setPage] = useState<RadioPage>("now");
   const [selection, setSelection] = useState(0);
   const [query, setQuery] = useState("");
+  const directoryFilter = useRef<DirectoryFilter>({});
+  const browser = useRef<RadioDirectoryBrowser | null>(null);
+  useEffect(() => () => browser.current?.close(), []);
   const [searchDraft, setSearchDraft] = useState("");
   const [trackEntry, setTrackEntry] = useState<{ id: string; track: NowPlaying } | null>(null);
   const [exploded, setExploded] = useState(false);
@@ -224,7 +235,7 @@ export function useRadio(options: RadioMountOptions): RadioController {
   const startingRef = useRef(false);
   const failoverRef = useRef<{ candidates: Station[]; index: number } | null>(null);
   const resolvedRef = useRef(new Map<string, { at: number; target: PlayTarget }>());
-  const rememberedVolumeRef = useRef(0.72);
+  const rememberedVolumeRef = useRef(preferences?.volume || 0.72);
   const recoverRef = useRef<() => void>(() => {});
   const emitRef = useRef<(event: PlayerEvent) => void>(() => {});
   const rowsRef = useRef<PageRow[]>([]);
@@ -400,6 +411,7 @@ export function useRadio(options: RadioMountOptions): RadioController {
         const request: CatalogRequest = { mood: nextMood, source: nextSource };
         if (nextQuery) request.query = nextQuery;
         if (countryCode) request.countryCode = countryCode;
+        if (nextSource === "radio-browser") request.filter = { ...directoryFilter.current };
         const result = await host.api.catalogSafe(request);
         if (run !== catalogRunRef.current) return;
         if (result.warning) setNotice(result.warning);
@@ -492,6 +504,7 @@ export function useRadio(options: RadioMountOptions): RadioController {
     (nextMood: MoodId, autoplay = true) => {
       playbackRunRef.current += 1;
       stopStream();
+      directoryFilter.current = {};
       setMood(nextMood);
       setSource("radio-browser");
       setQuery("");
@@ -507,6 +520,7 @@ export function useRadio(options: RadioMountOptions): RadioController {
     (nextSource: StationSource, autoplay = true) => {
       playbackRunRef.current += 1;
       stopStream();
+      directoryFilter.current = {};
       setSource(nextSource);
       setQuery("");
       setCurrent(null);
@@ -522,6 +536,7 @@ export function useRadio(options: RadioMountOptions): RadioController {
       playbackRunRef.current += 1;
       stopStream();
       setProfile((previous) => ({ ...previous, preferredCountryCode: countryCode }));
+      directoryFilter.current = {};
       setSource("regional");
       setQuery("");
       setCurrent(null);
@@ -540,6 +555,15 @@ export function useRadio(options: RadioMountOptions): RadioController {
     },
     [fetchStations],
   );
+
+  const browseDirectory = () => {
+    browser.current?.close();
+    browser.current = new RadioDirectoryBrowser(locale, filter => {
+      directoryFilter.current = filter; setMood('recommend'); setQuery(''); setSource('radio-browser');
+      setPage('stations'); void fetchStations('recommend', '', 'radio-browser', false);
+    });
+    browser.current.open(directoryFilter.current);
+  };
 
   const chooseTheme = useCallback(
     (nextThemeId: ThemeId) => {
@@ -645,6 +669,9 @@ export function useRadio(options: RadioMountOptions): RadioController {
   );
 
   // ------------------------------------------------------------- effects ---
+  useEffect(() => {
+    host.storage.savePreferences?.({ volume, mood });
+  }, [host, volume, mood]);
   useEffect(() => {
     host.storage.saveProfile(profile);
   }, [host, profile]);
@@ -774,8 +801,8 @@ export function useRadio(options: RadioMountOptions): RadioController {
       /* metadata is best effort */
     }
     const actions: Array<[MediaSessionAction, MediaSessionActionHandler | null]> = [
-      ["play", () => toggle()],
-      ["pause", () => toggle()],
+      ["play", () => { if (!isPlaying) toggle(); }],
+      ["pause", () => { if (isPlaying) toggle(); }],
       ["previoustrack", () => previous()],
       ["nexttrack", () => next()],
     ];
@@ -825,6 +852,7 @@ export function useRadio(options: RadioMountOptions): RadioController {
     liked,
     profile,
     locale,
+    languageSetting,
     toggle,
     next,
     previous,
@@ -839,6 +867,8 @@ export function useRadio(options: RadioMountOptions): RadioController {
     setVolume,
     retry,
     close,
+    showUpdates,
+    browseDirectory,
     buffering,
     starting: startingRef.current,
     muted,

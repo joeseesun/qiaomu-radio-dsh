@@ -49,16 +49,16 @@ export function createRadioApi(transport: RadioTransport): RadioApi {
     async catalogSafe(input: CatalogRequest): Promise<CatalogResult> {
       try {
         const result = await this.catalog(input);
-        if (Array.isArray(result?.stations) && result.stations.length > 0) return result;
+        if (Array.isArray(result?.stations) && (result.stations.length > 0 || Object.keys(input.filter || {}).length > 0)) return result;
       } catch {
         /* fall through to the offline list */
       }
       return {
-        stations: fallbackStationsFor(input.mood),
+        stations: Object.keys(input.filter || {}).length ? [] : fallbackStationsFor(input.mood),
         source: input.source,
         cached: false,
         countryCode: input.countryCode ?? null,
-        warning: "无法连接电台目录，正在使用内置备用台单。",
+        warning: Object.keys(input.filter || {}).length ? "Filtered directory unavailable. Retry or clear filters." : "无法连接电台目录，正在使用内置备用台单。",
       };
     },
 

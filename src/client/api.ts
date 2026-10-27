@@ -13,7 +13,7 @@
  * identical player renders in every environment.
  */
 
-import type { CatalogRequest, CatalogResult, NowPlaying, PlayTarget, Station, TasteProfile } from "../core/types";
+import type { MoodId, CatalogRequest, CatalogResult, NowPlaying, PlayTarget, Station, TasteProfile } from "../core/types";
 
 /** How the UI is allowed to reach the host. */
 export type RadioTransport =
@@ -36,7 +36,10 @@ export type RadioApi = {
 };
 
 /** Local, per-device persistence for taste memory and the chosen skin. */
+export type PlayerPreferences = { volume: number; mood: MoodId };
 export type RadioStorage = {
+  loadPreferences?(): PlayerPreferences | null;
+  savePreferences?(preferences: PlayerPreferences): void;
   loadProfile(): TasteProfile;
   saveProfile(profile: TasteProfile): void;
   loadTheme(): string | null;

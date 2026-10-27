@@ -251,7 +251,7 @@ export function createRadioService(options?: RadioServiceOptions): RadioService;
 
 ## 13. 移除极简皮肤
 
-当前支持五款皮肤：fantasy / rams / pocket / deck / console。Minimal（editorial）不再出现在主题菜单或渲染注册表；历史 editorial 设置与链接自动迁移为 rams，并保存迁移结果。此前六皮肤条目为历史基线。
+此前支持五款皮肤：fantasy / rams / pocket / deck / console。Minimal（editorial）不再出现在主题菜单或渲染注册表；历史 editorial 设置与链接自动迁移为 rams，并保存迁移结果。此前六皮肤条目为历史基线；当前清单见第 16 节。
 
 ## 14. 实体屏内导航
 
@@ -260,3 +260,19 @@ export function createRadioService(options?: RadioServiceOptions): RadioService;
 ## 15. 公开分发契约
 
 正式分发包含构建后的 host/client/player/HLS/GLB 与声明文件。prepack 执行构建并验证所有 exports 和必需资产；安装无需构建脚本。GitHub Topics/市场收录与软件包发布分别验收。当前发布从 main 构建，不包含其他工作区未提交的皮肤变更。
+## 16. 移除 Foobar2000 主题与缩小切换钮
+
+当前主题清单为 fantasy / rams / pocket / deck。Foobar2000（console）不再出现在主题菜单和渲染注册表；历史 console 设置与 `?theme=console` 链接迁移为 rams，并保存迁移结果。主题切换钮保持键盘可达及原有点击区域，视觉圆钮与图标缩小；闲置时保持低对比可见，仍可直接点击。
+
+
+## 17. 完整迁移审计（2026-10-28）
+
+在独立 worktree 上合并公开 0.1.1 的分发元数据与原工作区既有的四皮肤改动，保留原工作区及未跟踪文件。以 Obsidian Radio 1.2.4 的源文件逐项核对功能；延续明确移除 editorial / console 的当前配置，不自行重设计其余皮肤。记录 source commit 与适配差异，Home 协议和升级提示接线需要保持现有播放/收藏/历史的独立生命周期。发布和安装仍须分别验收；浏览器由用户使用期间不执行界面自动化。
+
+### 17.1 后台播放与 Home
+
+插件激活范围拥有一个延迟创建的播放器 iframe；面板只作为定位锚点，不拥有音频或 iframe 的卸载权。切到 Home 后隐藏原 iframe，不移除或重新挂载；停用 Radio 才销毁它。Home provider 直接复用原版 home.ts 的数据与动作逻辑。跨 frame 只接受同 origin、精确 source 的协议消息；播放动作只携带已知电台 ID，不接受外部注入的流地址。原版 Open/Toggle 命令接入 Harness 快捷命令，Home 停用不影响 Radio。
+
+### 17.2 原版目录、语言与持久化
+
+本轮完整迁移扩展历史冻结接口：MoodId 加入 recommend；CatalogRequest.filter 接原版 tag/country/language；原版分类面板方法及 CSS 片段原样保留并校验。带筛选的请求失败或零结果不得填充无关备用台单。语言扩为原版十种加 auto，复用原翻译，DSH 特有文案缺译时回退英语。更新说明复用原组件与 CSS，离线读取独立 metadata。音量/频道持久化保留既有收藏与主题键；解析或结构异常的数据在规范化前备份原始字符串，备份失败则禁止覆盖。以上代码与包检查不替代四皮肤、窄屏、深浅色、真实播放及后台持续播放验收。

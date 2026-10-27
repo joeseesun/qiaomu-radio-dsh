@@ -14,6 +14,7 @@ import { SKINS } from "./skins";
 import { useCompact, useReducedMotion } from "./skins/shared";
 import { ThemePicker } from "./ThemePicker";
 import { cx, h } from "./ui";
+import { useParentPlayerChannel } from "./player-channel";
 import { useRadio } from "./useRadio";
 
 export type RadioMountHandle = {
@@ -29,6 +30,7 @@ export function RadioApp(props: {
   container: HTMLElement | null;
 }): ReactNode {
   const controller = useRadio(props.options);
+  useParentPlayerChannel(controller);
   const compact = useCompact(props.container);
   const reducedMotion = useReducedMotion();
   const Skin = SKINS[controller.themeId];
@@ -44,6 +46,7 @@ export function RadioApp(props: {
       "data-motion": reducedMotion ? "off" : "on",
       "data-presentation": props.options.presentation ?? "page",
       lang: controller.locale,
+      dir: controller.locale === "ar" ? "rtl" : "ltr",
     },
     h(ThemePicker, { controller }),
     h(
