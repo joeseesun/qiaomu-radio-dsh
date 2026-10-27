@@ -119,13 +119,12 @@ type Surface = {
   state: () => string | undefined;
 };
 
-async function mount(theme = "pocket"): Promise<Surface> {
+async function mount(theme = "pocket", host = fakeHost()): Promise<Surface> {
   localStorage.setItem(LOCALE_KEY, "zh-CN");
   const container = document.createElement("div");
   container.className = "radio-mount";
   document.body.appendChild(container);
   Object.defineProperty(container, "clientWidth", { value: 1024, configurable: true });
-  const host = fakeHost();
   await act(async () => {
     handle = mountRadio({ host, initialTheme: theme, presentation: "inline" }, container);
     // Let the first catalog request and its state updates settle inside `act`.
@@ -169,6 +168,14 @@ async function press(surface: Surface, key: string): Promise<void> {
 /* -------------------------------------------------------------------- tests */
 
 describe("ui.navigation — in-screen browsing", () => {
+  it("loads the restored channel on first mount instead of the skin's unrelated default", async () => {
+    const host = fakeHost();
+    host.storage.loadPreferences = () => ({ mood: 'classical', volume: 0.23 });
+    const surface = await mount('pocket', host);
+    expect(host.requests[0]?.mood).toBe('classical');
+    expect(host.played).toEqual([]);
+    expect(surface.container.querySelector('.radio-root')).not.toBeNull();
+  });
   it("opens the original directory from search and forwards its selected filter without starting playback", async () => {
     const surface = await mount(); await press(surface, "Escape"); await click(surface, "搜索电台");
     const browse = [...surface.container.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent === '浏览电台')!;

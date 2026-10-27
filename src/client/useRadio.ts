@@ -698,7 +698,7 @@ export function useRadio(options: RadioMountOptions): RadioController {
   useEffect(() => {
     if (bootstrappedRef.current) return;
     bootstrappedRef.current = true;
-    void fetchStations(theme.mood, "", source, false);
+    void fetchStations(mood, "", source, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- initial load only
   }, []);
 
