@@ -1,7 +1,7 @@
 {
   "id": "@qiaomu/dsh-radio",
   "name": "乔木电台",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "summary": "在 DeepSeek Harness 里发现和收听全球直播电台：五种播放器环境、场景频道、本地口味记忆。",
   "halves": {
     "host": {
