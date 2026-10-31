@@ -1,6 +1,6 @@
 # 乔木电台 · DSH 插件
 
-> v0.1.2：DeepSeek Harness **0.2.1-rc.3** 兼容更新。[本次验证范围](docs/RC3-COMPATIBILITY.md)。
+> v0.1.3：DeepSeek Harness **0.2.1-rc.3** 兼容更新。[本次验证范围](docs/RC3-COMPATIBILITY.md)。
 
 把 [乔木电台](https://radio.qiaomu.ai/) 的五种播放器环境搬进 DeepSeek Harness：发现并收听全球直播电台，
 让音乐陪着你工作与阅读。
@@ -9,10 +9,10 @@
 
 ## 安装正式包
 
-从 [GitHub Releases](https://github.com/joeseesun/qiaomu-radio-dsh/releases) 下载 `qiaomu-dsh-radio-0.1.2.tgz`。使用已配置的 Web 或 Desktop profile 安装（下面以 `web` 为例）：
+从 [GitHub Releases](https://github.com/joeseesun/qiaomu-radio-dsh/releases) 下载 `qiaomu-dsh-radio-0.1.3.tgz`。使用已配置的 Web 或 Desktop profile 安装（下面以 `web` 为例）：
 
 ```bash
-dsh plugin --profile web add ./qiaomu-dsh-radio-0.1.2.tgz
+dsh plugin --profile web add ./qiaomu-dsh-radio-0.1.3.tgz
 ```
 
 重启对应 Harness，打开侧栏「乔木电台」。包内含编译产物、HLS 运行时和 3D 模型，安装时不需要构建。直播电台仍需联网。当前尚未发布 npm 包，请勿把包名安装当成已验证渠道。源码克隆供开发，不能代替正式包安装。
@@ -82,7 +82,7 @@ lib/player/styles.css   播放器样式
 lib/player/hls.js       懒加载的 hls.js 运行时
 ```
 
-正式包使用上文的 `dsh plugin --profile web add ./qiaomu-dsh-radio-0.1.2.tgz`。完整说明见 [安装与兼容范围](docs/INSTALL.md)。
+正式包使用上文的 `dsh plugin --profile web add ./qiaomu-dsh-radio-0.1.3.tgz`。完整说明见 [安装与兼容范围](docs/INSTALL.md)。
 
 ## 隐私与网络
 
@@ -162,3 +162,5 @@ See [installation details](docs/INSTALL.md).
 The desktop sidebar and Braun 3D player rendering were verified on September 30,
 2026. Audio playback was not retested during that display repair. Station availability
 depends on upstream services. This repository is open source. An npm package has not been published. Code is licensed under GPL-3.0-or-later (see LICENSE).
+
+本次 Harness rc.5 支持范围与实测边界见 [兼容验证记录](docs/RC5-COMPATIBILITY.md)。
