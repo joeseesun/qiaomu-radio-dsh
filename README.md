@@ -162,3 +162,5 @@ See [installation details](docs/INSTALL.md).
 The desktop sidebar and Braun 3D player rendering were verified on September 30,
 2026. Audio playback was not retested during that display repair. Station availability
 depends on upstream services. This repository is open source. An npm package has not been published. Code is licensed under GPL-3.0-or-later (see LICENSE).
+
+本次 Harness rc.5 支持范围与实测边界见 [兼容验证记录](docs/RC5-COMPATIBILITY.md)。
