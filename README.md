@@ -1,6 +1,6 @@
 # 乔木电台 · DSH 插件
 
-> v0.1.4：DeepSeek Harness **0.2.1-rc.3** 兼容更新。[本次验证范围](docs/RC3-COMPATIBILITY.md)。
+> v0.1.4：DeepSeek Harness **0.2.2-rc.1** 兼容更新。[本次验证范围](docs/DSH-0.2.2-RC1.md)。
 
 把 [乔木电台](https://radio.qiaomu.ai/) 的五种播放器环境搬进 DeepSeek Harness：发现并收听全球直播电台，
 让音乐陪着你工作与阅读。
@@ -153,7 +153,7 @@ GitHub Actions 自动执行类型检查、测试和构建。依赖、生成产�
 Qiaomu Radio brings five radio player environments to DeepSeek Harness, with global
 live stations, mood channels, playback controls, and locally stored preferences.
 
-Requires Node.js 22+ and npm for development, and DeepSeek Harness for integration.
+Requires Node.js 24.9+ and npm for development, and DeepSeek Harness for integration.
 Run `npm ci`, `npm run check`, then `npm run preview` for a standalone preview.
 Build before linking the package into your Harness profile. Add `@qiaomu/dsh-radio`
 to both profile dependencies and `dsh.profile.bundles`, then restart Harness.
